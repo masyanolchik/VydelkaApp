@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Виделка</string>
+    <string name="top_app_bar_logo_description">Логотип</string>
+    <string name="top_app_bar_cart_icon_description">Кошик</string>
+    <string name="top_app_bar_account_icon_description">Профіль користувача</string>
+    <string name="bottom_bar_home">Головна</string>
+    <string name="bottom_bar_catalogue">Каталог</string>
+    <string name="bottom_bar_favorites">Обране</string>
+    <string name="bottom_bar_profile">Профіль</string>
+</resources>
