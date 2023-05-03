@@ -7,4 +7,15 @@
     <string name="bottom_bar_catalogue">Каталог</string>
     <string name="bottom_bar_favorites">Обране</string>
     <string name="bottom_bar_profile">Профіль</string>
+
+    <string name="feed_best_section">Найкращі товари</string>
+    <string name="feed_history_section">Переглянуті товари</string>
+
+
+    <string name="computer_category">Комп. техніка</string>
+    <string name="household_category">Побутова техніка</string>
+
+    <string name="add_to_favorites_button_label">Додати товар до обраного</string>
+    <string name="add_to_cart_button_label">В кошик</string>
+    <string name="add_to_cart_button_label_added">Додано</string>
 </resources>
