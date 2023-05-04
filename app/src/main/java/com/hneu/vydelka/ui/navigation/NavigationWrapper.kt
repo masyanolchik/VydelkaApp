@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import com.hneu.vydelka.ui.categories.Categories
 import com.hneu.vydelka.ui.favorites.Favorites
 import com.hneu.vydelka.ui.feed.Feed
+import com.hneu.vydelka.ui.profile.Profile
 
 @Composable
 fun NavigationWrapper(
@@ -43,6 +44,6 @@ fun NavGraphBuilder.bottomNavigation() {
         Favorites()
     }
     composable(BottomMenuItem.ProfileScreen.route) {
-        DummyScreen()
+        Profile()
     }
 }

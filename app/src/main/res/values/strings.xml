@@ -16,6 +16,12 @@
 
     <string name="favorites_total_sum">Всього товарів на суму: %1$d грн</string>
 
+    <string name="profile_not_logged_in_message">Увійдіть до власного кабінет, щоб переглядати історію замовлень, переглядів та швидше оформлювати ваші покупки</string>
+    <string name="profile_not_logged_in_button">Увійти</string>
+    <string name="profile_my_orders">Мої замовлення</string>
+    <string name="profile_view_history">Історія переглядів</string>
+    <string name="profile_settings">Змінити контактну інформацію та адресу доставки</string>
+
     <string name="add_to_favorites_button_label">Додати товар до обраного</string>
     <string name="add_to_cart_button_label">В кошик</string>
     <string name="add_to_cart_button_label_added">Додано</string>

@@ -65,7 +65,9 @@ fun Favorites() {
             contentDescription = "",
         )
     )
-    Column {
+    Column(
+        modifier = Modifier.padding(16.dp),
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -73,7 +75,7 @@ fun Favorites() {
             verticalAlignment = Alignment.CenterVertically,
         ){
             Text(
-                text = stringResource(id = R.string.favorites_total_sum, 99999)
+                text = stringResource(id = R.string.favorites_total_sum, 99999),
             )
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -91,8 +93,6 @@ fun Favorites() {
             }
         }
         LazyColumn(
-            modifier = Modifier
-                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(fakeProducts) {
