@@ -11,9 +11,10 @@
     <string name="feed_best_section">Найкращі товари</string>
     <string name="feed_history_section">Переглянуті товари</string>
 
-
     <string name="computer_category">Комп. техніка</string>
     <string name="household_category">Побутова техніка</string>
+
+    <string name="favorites_total_sum">Всього товарів на суму: %1$d грн</string>
 
     <string name="add_to_favorites_button_label">Додати товар до обраного</string>
     <string name="add_to_cart_button_label">В кошик</string>

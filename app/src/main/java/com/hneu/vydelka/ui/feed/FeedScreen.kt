@@ -48,10 +48,10 @@ fun Feed() {
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         ){
-            CategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-            CategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-            CategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-            CategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
+            SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
+            SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
+            SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
+            SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
         }
         Row(
             modifier = Modifier
@@ -59,10 +59,10 @@ fun Feed() {
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         ) {
-            CategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-            CategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-            CategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-            CategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
+            SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
+            SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
+            SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
+            SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
         }
         Divider()
         // Placeholder for a real section in the future

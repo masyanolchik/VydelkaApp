@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun CategoryButton(title:String, imageVector: ImageVector, contentDescription: String) {
+fun SmallCategoryButton(title:String, imageVector: ImageVector, contentDescription: String) {
     val buttonColor = MaterialTheme.colorScheme.secondaryContainer
     val onButtonColor = MaterialTheme.colorScheme.onSecondaryContainer
     Card(
@@ -67,5 +67,5 @@ fun CategoryButton(title:String, imageVector: ImageVector, contentDescription: S
 @Preview(showBackground = true)
 @Composable
 fun CategoryButtonPreview() {
-    CategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
+    SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
 }

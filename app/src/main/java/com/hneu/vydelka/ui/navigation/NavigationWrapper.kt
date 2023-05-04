@@ -10,6 +10,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.hneu.vydelka.ui.categories.Categories
+import com.hneu.vydelka.ui.favorites.Favorites
 import com.hneu.vydelka.ui.feed.Feed
 
 @Composable
@@ -35,10 +37,10 @@ fun NavGraphBuilder.bottomNavigation() {
         Feed()
     }
     composable(BottomMenuItem.CatalogueScreen.route) {
-        DummyScreen()
+        Categories()
     }
     composable(BottomMenuItem.FavoritesScreen.route) {
-        DummyScreen()
+        Favorites()
     }
     composable(BottomMenuItem.ProfileScreen.route) {
         DummyScreen()
