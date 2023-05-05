@@ -7,6 +7,10 @@
     <string name="bottom_bar_catalogue">Каталог</string>
     <string name="bottom_bar_favorites">Обране</string>
     <string name="bottom_bar_profile">Профіль</string>
+    <string name="bottom_sheet_remove_product_from_cart">Видалити товар з кошика</string>
+    <string name="bottom_sheet_reduce_product_content_description">Зменшити кількість товару</string>
+    <string name="bottom_sheet_add_product_content_description">Збільшити кількість товару</string>
+    <string name="bottom_sheet_proceed_order">Оформити замовлення</string>
 
     <string name="feed_best_section">Найкращі товари</string>
     <string name="feed_history_section">Переглянуті товари</string>
