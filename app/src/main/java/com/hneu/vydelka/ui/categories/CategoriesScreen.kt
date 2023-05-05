@@ -22,9 +22,6 @@ fun Categories() {
             .padding(start = 16.dp, top = 16.dp, end = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-        Text(
-            text = stringResource(id = R.string.bottom_bar_catalogue)
-        )
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
