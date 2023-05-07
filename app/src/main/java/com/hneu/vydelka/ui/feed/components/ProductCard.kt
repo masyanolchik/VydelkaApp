@@ -262,8 +262,7 @@ fun CartProductCard(
                             value = "28",
                             onValueChange = {},
                             singleLine = true,
-                            modifier = Modifier
-                                .width(52.dp),
+                            modifier = Modifier.width(52.dp),
                         )
                         IconButton(
                             onClick = {  },

@@ -2,6 +2,7 @@
     <string name="app_name">Виделка</string>
     <string name="top_app_bar_logo_description">Логотип</string>
     <string name="top_app_bar_cart_icon_description">Кошик</string>
+    <string name="top_app_bar_dismiss_icon_description">Закрити екран</string>
     <string name="top_app_bar_account_icon_description">Профіль користувача</string>
     <string name="bottom_bar_home">Головна</string>
     <string name="bottom_bar_catalogue">Каталог</string>
@@ -11,6 +12,12 @@
     <string name="bottom_sheet_reduce_product_content_description">Зменшити кількість товару</string>
     <string name="bottom_sheet_add_product_content_description">Збільшити кількість товару</string>
     <string name="bottom_sheet_proceed_order">Оформити замовлення</string>
+
+    <string name="order_form_name_label">Ім\'я</string>
+    <string name="order_form_lastname_label">Прізвище</string>
+    <string name="order_form_phone_label">Телефон</string>
+    <string name="order_form_address_label">Адреса</string>
+    <string name="order_form_next_label">Далі</string>
 
     <string name="feed_best_section">Найкращі товари</string>
     <string name="feed_history_section">Переглянуті товари</string>
@@ -25,6 +32,15 @@
     <string name="profile_my_orders">Мої замовлення</string>
     <string name="profile_view_history">Історія переглядів</string>
     <string name="profile_settings">Змінити контактну інформацію та адресу доставки</string>
+    <string name="profile_save_user_info">Зберегти</string>
+    <string name="profile_user_info_edit_title">Контактні дані</string>
+
+    <string name="order_history_order_number_label">Номер: %1$s</string>
+    <string name="order_history_order_status_label">Статус: %1$s</string>
+    <string name="order_history_order_products_expand_collapse_button_description">Розкрити список товарів</string>
+    <string name="order_history_order_total_sum_label">Сума: %1$s</string>
+
+    <string name="view_history_title">Історія переглядів</string>
 
     <string name="add_to_favorites_button_label">Додати товар до обраного</string>
     <string name="add_to_cart_button_label">В кошик</string>

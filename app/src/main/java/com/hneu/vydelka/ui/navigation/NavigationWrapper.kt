@@ -3,7 +3,6 @@ package com.hneu.vydelka.ui.navigation
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
@@ -20,30 +19,28 @@ fun NavigationWrapper(
     navController: NavHostController,
     scrollState: ScrollState,
     paddingValues: PaddingValues,
+    onNavigate: (String) -> Unit,
 ) {
     NavHost(navController = navController, startDestination = BottomMenuItem.FeedScreen.route, modifier = Modifier.padding(paddingValues)) {
-        bottomNavigation()
+        bottomNavigation(onNavigate)
     }
 }
 
-@Composable
-fun DummyScreen() {
-    Text(
-        text = "DUMMY"
-    )
-}
-
-fun NavGraphBuilder.bottomNavigation() {
+fun NavGraphBuilder.bottomNavigation(onNavigate: (String) -> Unit) {
     composable(BottomMenuItem.FeedScreen.route) {
         Feed()
+        onNavigate(BottomMenuItem.FeedScreen.route)
     }
     composable(BottomMenuItem.CatalogueScreen.route) {
         Categories()
+        onNavigate(BottomMenuItem.CatalogueScreen.route)
     }
     composable(BottomMenuItem.FavoritesScreen.route) {
         Favorites()
+        onNavigate(BottomMenuItem.FavoritesScreen.route)
     }
     composable(BottomMenuItem.ProfileScreen.route) {
         Profile()
+        onNavigate(BottomMenuItem.ProfileScreen.route)
     }
 }
