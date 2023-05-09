@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -125,3 +126,9 @@ data class DummyProduct(
     val imageSrc: String,
     val contentDescription: String,
 )
+
+@Preview(showBackground = true)
+@Composable
+fun FavoritesPreview() {
+    Favorites()
+}

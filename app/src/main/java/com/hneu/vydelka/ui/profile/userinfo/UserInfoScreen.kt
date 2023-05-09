@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import com.hneu.vydelka.R
 import com.hneu.vydelka.ui.order.components.FullScreenDialogWithElevatedTopAppBar
 import com.hneu.vydelka.ui.order.components.UserOrderConfirmationInfoForm
@@ -64,5 +65,13 @@ fun UserInfoScreen(onClose: () -> Unit, onProceed: () -> Unit) {
             onPhoneTextFieldValueChanged = { changedText -> phoneText = changedText },
             onAddressTextFieldValueChanged = { changedText -> addressText = changedText },
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewUserInfo() {
+    UserInfoScreen(onClose = { /*TODO*/ }) {
+
     }
 }

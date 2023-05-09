@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hneu.vydelka.R
 import com.hneu.vydelka.ui.favorites.DummyProduct
@@ -144,4 +145,10 @@ fun OrderHistoryScreen(onClose: () -> Unit) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewOrderHistory() {
+    OrderHistoryScreen {}
 }
