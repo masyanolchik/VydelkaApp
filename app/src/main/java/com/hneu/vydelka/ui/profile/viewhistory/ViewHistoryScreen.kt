@@ -16,13 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.hneu.vydelka.R
 import com.hneu.vydelka.ui.favorites.DummyProduct
 import com.hneu.vydelka.ui.feed.components.ProductCard
+import com.hneu.vydelka.ui.navigation.NavigationRoutes
 import com.hneu.vydelka.ui.order.components.FullScreenDialogWithElevatedTopAppBar
 
 @Composable
-fun ViewHistoryScreen(onClose: () -> Unit) {
+fun ViewHistoryScreen(navController: NavHostController = rememberNavController(), onClose: () -> Unit) {
     val topAppBarNavigationIcon: @Composable () -> Unit = {
         IconButton(onClick = onClose) {
             Icon(
@@ -107,9 +110,11 @@ fun ViewHistoryScreen(onClose: () -> Unit) {
                     ProductCard(
                         title = it.name,
                         price = it.price,
-                        imageSrc = it.imageSrc,
                         contentDescription =it.contentDescription,
-                    )
+                        imageSrc = it.imageSrc,
+                    ) {
+                        navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0))
+                    }
                 }
             }
         }

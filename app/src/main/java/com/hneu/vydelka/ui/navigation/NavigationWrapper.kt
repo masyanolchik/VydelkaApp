@@ -13,6 +13,7 @@ import com.hneu.vydelka.ui.categories.Categories
 import com.hneu.vydelka.ui.categories.category.CategoryScreen
 import com.hneu.vydelka.ui.favorites.Favorites
 import com.hneu.vydelka.ui.feed.Feed
+import com.hneu.vydelka.ui.product.ProductScreen
 import com.hneu.vydelka.ui.profile.Profile
 
 @Composable
@@ -42,11 +43,16 @@ fun NavGraphBuilder.navigateTo(navController: NavHostController, onNavigate: (St
     }
     composable(BottomMenuItem.ProfileScreen.route) {
         onNavigate(BottomMenuItem.ProfileScreen.route)
-        Profile()
+        Profile(navController)
     }
     composable("${NavigationRoutes.CategoryRoute.route}{${NavigationRoutes.CategoryRoute.idRoute}}") { backStackEntry ->
         val id = backStackEntry.arguments?.getInt(NavigationRoutes.CategoryRoute.idRoute) ?: -1
         onNavigate(NavigationRoutes.CategoryRoute.route)
         CategoryScreen(navController = navController, id = id)
+    }
+    composable("${NavigationRoutes.ProductRoute.route}{${NavigationRoutes.ProductRoute.idRoute}}") { backStackEntry ->
+        val id = backStackEntry.arguments?.getInt(NavigationRoutes.ProductRoute.idRoute) ?: -1
+        onNavigate(NavigationRoutes.ProductRoute.route)
+        ProductScreen(navController = navController, id = id)
     }
 }

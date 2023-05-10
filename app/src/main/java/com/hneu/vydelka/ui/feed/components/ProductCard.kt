@@ -1,5 +1,6 @@
 package com.hneu.vydelka.ui.feed.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -31,6 +32,7 @@ fun ProductCard(
     price: String,
     contentDescription: String,
     imageSrc: String,
+    onCardClicked: () -> Unit,
 ) {
     var isProductAddedToCart by rememberSaveable { mutableStateOf(false) }
     var isProductFavorited by rememberSaveable { mutableStateOf(false) }
@@ -39,6 +41,7 @@ fun ProductCard(
         modifier = Modifier
             .height(IntrinsicSize.Min)
             .fillMaxWidth()
+            .clickable { onCardClicked.invoke() }
     ) {
         Column(
             modifier = Modifier
@@ -288,7 +291,7 @@ fun PreviewProductCard() {
         price = "9 999 ₴",
         contentDescription = "",
         imageSrc = "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
-    )
+    ) {}
 }
 
 @Preview

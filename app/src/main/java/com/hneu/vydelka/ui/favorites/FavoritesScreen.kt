@@ -16,6 +16,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hneu.vydelka.R
 import com.hneu.vydelka.ui.feed.components.ProductCard
+import com.hneu.vydelka.ui.navigation.NavigationRoutes
 
 @Composable
 fun Favorites(navController: NavHostController = rememberNavController()) {
@@ -113,7 +114,9 @@ fun Favorites(navController: NavHostController = rememberNavController()) {
                     price = it.price,
                     contentDescription = "",
                     imageSrc = it.imageSrc,
-                )
+                ) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0))
+                }
             }
         }
     }

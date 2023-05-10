@@ -114,7 +114,7 @@ fun Feed(navController: NavHostController = rememberNavController()) {
                     "9 999 ₴",
                     "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
                     "",
-                    onCardClicked = {},
+                    onCardClicked = { navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0)) },
                     onCartAddedClicked = {},
                 )
                 MediumBoxProductCard(
@@ -122,7 +122,7 @@ fun Feed(navController: NavHostController = rememberNavController()) {
                     "9 999 ₴",
                     "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
                     "",
-                    onCardClicked = {},
+                    onCardClicked = { navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0)) },
                     onCartAddedClicked = {},
                 )
                 MediumBoxProductCard(
@@ -130,7 +130,7 @@ fun Feed(navController: NavHostController = rememberNavController()) {
                     "9 999 ₴",
                     "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
                     "",
-                    onCardClicked = {},
+                    onCardClicked = { navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0)) },
                     onCartAddedClicked = {},
                 )
                 MediumBoxProductCard(
@@ -138,7 +138,7 @@ fun Feed(navController: NavHostController = rememberNavController()) {
                     "9 999 ₴",
                     "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
                     "",
-                    onCardClicked = {},
+                    onCardClicked = { navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0)) },
                     onCartAddedClicked = {},
                 )
             }
@@ -157,31 +157,41 @@ fun Feed(navController: NavHostController = rememberNavController()) {
                     price = "9 999 ₴",
                     imageSrc = "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
                     contentDescription = "",
-                ) {}
+                ) {
+                   navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0))
+                }
                 SmallBoxProduct(
                     title = "Product Name Pro Max 256/16 GB",
                     price = "9 999 ₴",
                     imageSrc = "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
                     contentDescription = "",
-                ) {}
+                ) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0))
+                }
                 SmallBoxProduct(
                     title = "Product Name Pro Max 256/16 GB",
                     price = "9 999 ₴",
                     imageSrc = "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
                     contentDescription = "",
-                ) {}
+                ) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0))
+                }
                 SmallBoxProduct(
                     title = "Product Name Pro Max 256/16 GB",
                     price = "9 999 ₴",
                     imageSrc = "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
                     contentDescription = "",
-                ) {}
+                ) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0))
+                }
                 SmallBoxProduct(
                     title = "Product Name Pro Max 256/16 GB",
                     price = "9 999 ₴",
                     imageSrc = "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
                     contentDescription = "",
-                ) {}
+                ) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0))
+                }
             }
             Divider()
             SectionLabel(text = stringResource(id = R.string.computer_category))
@@ -195,13 +205,17 @@ fun Feed(navController: NavHostController = rememberNavController()) {
                     price = "9 999 ₴",
                     contentDescription = "",
                     imageSrc = "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
-                )
+                ) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0))
+                }
                 ProductCard(
                     title = "Product Name Pro Max 256/16 GB",
                     price = "9 999 ₴",
                     contentDescription = "",
                     imageSrc = "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
-                )
+                ) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0))
+                }
             }
             SectionLabel(text = stringResource(id = R.string.household_category))
             Column(
@@ -214,13 +228,17 @@ fun Feed(navController: NavHostController = rememberNavController()) {
                     price = "9 999 ₴",
                     contentDescription = "",
                     imageSrc = "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
-                )
+                ) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0))
+                }
                 ProductCard(
                     title = "Product Name Pro Max 256/16 GB",
                     price = "9 999 ₴",
                     contentDescription = "",
                     imageSrc = "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
-                )
+                ) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0))
+                }
             }
         }
     }

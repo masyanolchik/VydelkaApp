@@ -22,13 +22,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.hneu.vydelka.R
 import com.hneu.vydelka.ui.profile.ordershistory.OrderHistoryScreen
 import com.hneu.vydelka.ui.profile.userinfo.UserInfoScreen
 import com.hneu.vydelka.ui.profile.viewhistory.ViewHistoryScreen
 
 @Composable
-fun Profile() {
+fun Profile(navController: NavHostController = rememberNavController()) {
     var openOrderHistoryDialog by rememberSaveable { mutableStateOf(false) }
     var openViewHistoryDialog by rememberSaveable { mutableStateOf(false) }
     var openAccountDetailsDialog by rememberSaveable { mutableStateOf(false) }
@@ -41,6 +43,7 @@ fun Profile() {
         }
         openViewHistoryDialog -> {
             ViewHistoryScreen(
+                navController = navController,
                 onClose = { openViewHistoryDialog = false },
             )
         }
