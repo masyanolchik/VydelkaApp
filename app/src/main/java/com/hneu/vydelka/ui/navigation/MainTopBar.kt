@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,7 +27,7 @@ import com.hneu.vydelka.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(showLogo: Boolean = true, showSearch: Boolean = false, onCartButtonClick: () -> Unit,) {
+fun MainTopBar(showLogo: Boolean = true, showSearch: Boolean = false, onCartButtonClick: () -> Unit,) {
     var text by rememberSaveable { mutableStateOf("") }
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
@@ -55,7 +56,7 @@ fun TopBar(showLogo: Boolean = true, showSearch: Boolean = false, onCartButtonCl
                         placeholder = { Text(stringResource(R.string.category_search_hint)) },
                         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                         modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp, top = 0.dp , bottom = 8.dp)
+                            .padding(start = 16.dp, end = 16.dp, top = 0.dp, bottom = 8.dp)
                             .constrainAs(searchBarRef) {
                                 start.linkTo(parent.start)
                                 top.linkTo(parent.top, 4.dp)
@@ -118,8 +119,79 @@ fun TopBar(showLogo: Boolean = true, showSearch: Boolean = false, onCartButtonCl
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CategoryTopAppBar(
+    title: String = "",
+    onClose: () -> Unit = {},
+    onSortButtonClick: () -> Unit = {},
+    onFilterButtonClick: () -> Unit = {},
+    onCartButtonClick: () -> Unit = {},
+) {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val topAppBarNavigationIcon: @Composable () -> Unit = {
+        IconButton(onClick = onClose) {
+            Icon(
+                imageVector = Icons.Outlined.ArrowBack,
+                contentDescription = stringResource(id = R.string.top_app_bar_dismiss_icon_description)
+            )
+        }
+    }
+    TopAppBar(
+        scrollBehavior = scrollBehavior,
+        navigationIcon = topAppBarNavigationIcon,
+        title = {
+            Text(text = title)
+        },
+        actions = {
+            IconButton(onClick = onSortButtonClick) {
+                Icon(
+                    imageVector = Icons.Outlined.Sort,
+                    contentDescription = stringResource(id = R.string.catalogue_sort_button_description)
+                )
+            }
+            IconButton(onClick = onFilterButtonClick) {
+                Icon(
+                    imageVector = Icons.Outlined.FilterAlt,
+                    contentDescription = stringResource(id = R.string.catalogue_filter_button_description)
+                )
+            }
+            Box {
+                Badge(
+                    modifier = Modifier.align(Alignment.TopEnd)
+                ) {
+                    val badgeNumber = "3"
+                    Text(
+                        badgeNumber,
+                        modifier = Modifier.semantics {
+                            contentDescription = "$badgeNumber new notifications"
+                        }
+                    )
+                }
+                IconButton(onClick = onCartButtonClick) {
+                    Icon(
+                        imageVector = Icons.Filled.ShoppingCart,
+                        contentDescription = stringResource(id = R.string.top_app_bar_cart_icon_description),
+                    )
+                }
+            }
+        }
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
-fun TopBarPreview() {
-    TopBar {}
+fun MainTopBarPreview() {
+    MainTopBar {}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CategoryTopAppBar() {
+    CategoryTopAppBar(
+        "CATEGORY NAME",
+        {
+
+        },
+    )
 }

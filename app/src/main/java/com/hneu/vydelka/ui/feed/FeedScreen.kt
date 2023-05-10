@@ -18,6 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.hneu.vydelka.R
@@ -26,7 +28,7 @@ import com.hneu.vydelka.ui.feed.promo.PromoScreen
 import com.hneu.vydelka.ui.feed.testing.MockData
 
 @Composable
-fun Feed() {
+fun Feed(navController: NavHostController = rememberNavController()) {
     var openPromoScreenDialog by rememberSaveable { mutableStateOf(false) }
     var openPromoScreenTitle by rememberSaveable { mutableStateOf("") }
     if(openPromoScreenDialog) {

@@ -2,8 +2,6 @@ package com.hneu.vydelka.ui.categories.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +13,7 @@ import androidx.compose.ui.unit.sp
 import com.hneu.core.domain.Category
 
 @Composable
-fun SubCategoryCard(title:String,subcategories: List<Category>) {
+fun SubCategoryCard(mainCategory:Category, subcategories: List<Category>, onCategoryClick: (Int) -> Unit) {
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -26,13 +24,15 @@ fun SubCategoryCard(title:String,subcategories: List<Category>) {
                 .padding(8.dp)
         ) {
             Text(
-                text = title,
+                text = mainCategory.name,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
-                    .clickable {  },
+                    .clickable {
+                       onCategoryClick(mainCategory.id)
+                    },
             )
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -45,7 +45,9 @@ fun SubCategoryCard(title:String,subcategories: List<Category>) {
                         modifier = Modifier
                             .height(24.dp)
                             .fillMaxWidth()
-                            .clickable {  },
+                            .clickable {
+                                onCategoryClick(category.id)
+                            },
                     )
                 }
             }
@@ -56,6 +58,7 @@ fun SubCategoryCard(title:String,subcategories: List<Category>) {
 @Preview
 @Composable
 fun PreviewSubCategoryCard() {
-    val dummyCategory = Category("SubCategory", null, listOf())
-    SubCategoryCard(title = "CategoryName", subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory))
+    val mainCategory = Category("MainCategory", null, listOf())
+    val dummyCategory = Category("SubCategory", mainCategory, listOf())
+    SubCategoryCard(mainCategory =  mainCategory, subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory)) {}
 }

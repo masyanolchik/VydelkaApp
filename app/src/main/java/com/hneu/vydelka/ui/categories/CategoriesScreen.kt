@@ -4,29 +4,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.PhoneIphone
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.Text
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.hneu.core.domain.Category
-import com.hneu.vydelka.R
+import com.hneu.vydelka.ui.categories.category.CategoryScreen
 import com.hneu.vydelka.ui.categories.components.MediumCategoryCard
 import com.hneu.vydelka.ui.categories.components.SubCategoryCard
+import com.hneu.vydelka.ui.navigation.NavigationRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Categories() {
+fun Categories(navController: NavHostController = rememberNavController()) {
     Column(
         modifier = Modifier
             .padding(start = 16.dp, top = 16.dp, end = 16.dp),
@@ -38,26 +31,28 @@ fun Categories() {
                 .fillMaxSize()
         ) {
             CategorySelectionStrip()
-            SubCategorySelectionStrip()
+            SubCategorySelectionStrip(navController)
         }
     }
 }
 
 @Composable
-fun SubCategorySelectionStrip() {
+fun SubCategorySelectionStrip(navController: NavHostController = rememberNavController()) {
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        val dummyCategory = Category("SubCategory", null, listOf())
-        SubCategoryCard(title = "CategoryName", subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory))
-        SubCategoryCard(title = "CategoryName", subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory))
-        SubCategoryCard(title = "CategoryName", subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory))
-        SubCategoryCard(title = "CategoryName", subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory))
-        SubCategoryCard(title = "CategoryName", subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory))
-        SubCategoryCard(title = "CategoryName", subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory))
-        SubCategoryCard(title = "CategoryName", subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory))
+        val mainCategory = Category("MainCategory", null, listOf())
+        val dummyCategory = Category("SubCategory", mainCategory, listOf())
+        val onCategoryClick: (Int) -> Unit = { navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, 0)) }
+        SubCategoryCard(mainCategory = mainCategory, subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory), onCategoryClick)
+        SubCategoryCard(mainCategory = mainCategory, subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory), onCategoryClick)
+        SubCategoryCard(mainCategory = mainCategory, subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory), onCategoryClick)
+        SubCategoryCard(mainCategory = mainCategory, subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory), onCategoryClick)
+        SubCategoryCard(mainCategory = mainCategory, subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory), onCategoryClick)
+        SubCategoryCard(mainCategory = mainCategory, subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory), onCategoryClick)
+        SubCategoryCard(mainCategory = mainCategory, subcategories = listOf(dummyCategory, dummyCategory, dummyCategory, dummyCategory), onCategoryClick)
     }
 }
 
