@@ -45,4 +45,6 @@
     <string name="add_to_favorites_button_label">Додати товар до обраного</string>
     <string name="add_to_cart_button_label">В кошик</string>
     <string name="add_to_cart_button_label_added">Додано</string>
+    <string name="category_search_hint">Почніть вводити назву товара</string>
+    <string name="continue_to_promo">Перейти до акційних товарів</string>
 </resources>

@@ -10,25 +10,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hneu.vydelka.R
 
-class PromoImageAdapter() :
-    ListAdapter<PromoImageAdapter.ImageData, PromoImageAdapter.PromoImageViewHolder>(ImageData.diffUtil) {
-    data class ImageData(val imageSrc: String) {
+class PromoImageAdapter(val onPromoClick:(PromoData) -> Unit) :
+    ListAdapter<PromoImageAdapter.PromoData, PromoImageAdapter.PromoImageViewHolder>(PromoData.diffUtil) {
+    data class PromoData(val promoTitle: String, val imageSrc: String, val promoId: Int) {
         companion object {
-            val diffUtil = object : DiffUtil.ItemCallback<ImageData>() {
-                override fun areItemsTheSame(oldItem: ImageData, newItem: ImageData) =
+            val diffUtil = object : DiffUtil.ItemCallback<PromoData>() {
+                override fun areItemsTheSame(oldItem: PromoData, newItem: PromoData) =
                     oldItem === newItem
 
-                override fun areContentsTheSame(oldItem: ImageData, newItem: ImageData) =
+                override fun areContentsTheSame(oldItem: PromoData, newItem: PromoData) =
                     oldItem == newItem
             }
         }
     }
 
-    class PromoImageViewHolder(private val maskableFrameLayout: View) :
+    inner class PromoImageViewHolder(private val maskableFrameLayout: View) :
         RecyclerView.ViewHolder(maskableFrameLayout) {
-        fun bind(imageSrc: String) {
+        fun bind(promoData: PromoData) {
+            maskableFrameLayout.setOnClickListener { onPromoClick.invoke(promoData) }
             val imageView = maskableFrameLayout.findViewById<ImageView>(R.id.carousel_image_view)
-            Glide.with(itemView.context).load(imageSrc).into(imageView)
+            Glide.with(itemView.context).load(promoData.imageSrc).into(imageView)
         }
     }
 
@@ -38,6 +39,6 @@ class PromoImageAdapter() :
         )
 
     override fun onBindViewHolder(holder: PromoImageViewHolder, position: Int) {
-        holder.bind(getItem(position).imageSrc)
+        holder.bind(getItem(position))
     }
 }

@@ -28,6 +28,8 @@ fun VydelkaApp() {
 fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
     var showTopAppbar by rememberSaveable { mutableStateOf(true) }
+    var showLogo by rememberSaveable() { mutableStateOf(true) }
+    var showSearchTextField by rememberSaveable { mutableStateOf(false) }
     var skipPartiallyExpanded by remember { mutableStateOf(false) }
     var showOrderFormDialog by rememberSaveable{ mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -37,7 +39,10 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
     Scaffold(
         topBar = {
             if(showTopAppbar) {
-                TopBar {
+                TopBar(
+                    showLogo = showLogo,
+                    showSearch = showSearchTextField,
+                ) {
                     openBottomSheet = !openBottomSheet
                 }
             }
@@ -48,6 +53,8 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
     ) {
         NavigationWrapper(navController, scrollState, it) { route ->
             showTopAppbar = route != BottomMenuItem.ProfileScreen.route
+            showLogo = route != BottomMenuItem.CatalogueScreen.route
+            showSearchTextField = route == BottomMenuItem.CatalogueScreen.route
         }
         if(showOrderFormDialog) {
             OrderConfirmationForm(
