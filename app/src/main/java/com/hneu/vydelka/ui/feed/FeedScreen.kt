@@ -26,6 +26,7 @@ import com.hneu.vydelka.R
 import com.hneu.vydelka.ui.feed.components.*
 import com.hneu.vydelka.ui.feed.promo.PromoScreen
 import com.hneu.vydelka.ui.feed.testing.MockData
+import com.hneu.vydelka.ui.navigation.NavigationRoutes
 
 @Composable
 fun Feed(navController: NavHostController = rememberNavController()) {
@@ -66,10 +67,18 @@ fun Feed(navController: NavHostController = rememberNavController()) {
                     .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             ){
-                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
+                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "",) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, 0))
+                }
+                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "",) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, 0))
+                }
+                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "",) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, 0))
+                }
+                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "",) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, 0))
+                }
             }
             Row(
                 modifier = Modifier
@@ -77,10 +86,18 @@ fun Feed(navController: NavHostController = rememberNavController()) {
                     .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             ) {
-                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
-                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "")
+                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "",) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, 0))
+                }
+                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "",) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, 0))
+                }
+                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "",) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, 0))
+                }
+                SmallCategoryButton("Very very very long text", Icons.Outlined.PhoneIphone, "",) {
+                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, 0))
+                }
             }
             Divider()
             // Placeholder for a real section in the future
