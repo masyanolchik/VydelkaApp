@@ -11,8 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.hneu.core.domain.Category
-import com.hneu.vydelka.ui.categories.category.CategoryScreen
+import com.hneu.core.domain.product.Category
 import com.hneu.vydelka.ui.categories.components.MediumCategoryCard
 import com.hneu.vydelka.ui.categories.components.SubCategoryCard
 import com.hneu.vydelka.ui.navigation.NavigationRoutes

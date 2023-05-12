@@ -10,10 +10,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hneu.core.domain.Category
+import com.hneu.core.domain.product.Category
 
 @Composable
-fun SubCategoryCard(mainCategory:Category, subcategories: List<Category>, onCategoryClick: (Int) -> Unit) {
+fun SubCategoryCard(mainCategory: Category, subcategories: List<Category>, onCategoryClick: (Int) -> Unit) {
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
