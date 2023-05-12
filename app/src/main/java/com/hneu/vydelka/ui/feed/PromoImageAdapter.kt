@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hneu.vydelka.R
 
-class PromoImageAdapter(val onPromoClick:(PromoData) -> Unit) :
+class PromoImageAdapter(val useWideItems:Boolean = false,val onPromoClick:(PromoData) -> Unit) :
     ListAdapter<PromoImageAdapter.PromoData, PromoImageAdapter.PromoImageViewHolder>(PromoData.diffUtil) {
     data class PromoData(val promoTitle: String, val imageSrc: String, val promoId: Int) {
         companion object {
@@ -35,7 +35,7 @@ class PromoImageAdapter(val onPromoClick:(PromoData) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         PromoImageViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.carousel_list_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(if(useWideItems) R.layout.carousel_list_item_wide else R.layout.carousel_list_item_small, parent, false)
         )
 
     override fun onBindViewHolder(holder: PromoImageViewHolder, position: Int) {

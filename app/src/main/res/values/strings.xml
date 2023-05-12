@@ -49,4 +49,11 @@
     <string name="continue_to_promo">Перейти до акційних товарів</string>
     <string name="catalogue_sort_button_description">Сортувати</string>
     <string name="catalogue_filter_button_description">Фільтри</string>
+
+    <string name="product_code_label">Код товару: %1$d</string>
+    <string name="product_price_label">%1$d ₴</string>
+    <string name="product_warranty_label">Гарантія: %1$d міс.</string>
+    <string name="product_return_label">Обмін/Повернення: %1$d днів</string>
+    <string name="product_characteristics_label">Характеристики</string>
+    <string name="product_description_label">Опис</string>
 </resources>
