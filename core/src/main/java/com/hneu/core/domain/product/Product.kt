@@ -12,9 +12,9 @@ data class Product(
     val category: Category,
     val description: String,
     val titleImageSrc: String,
-    val images: String,
+    val images: List<String>,
     val attributes: Set<Attribute>,
-    val additionalTags: Set<Tag>
+    val additionalTags: Set<Tag> = emptySet()
 ) {
     fun getSearchTags() : List<String> {
         return listOf(name, price.toString(), category.name) + additionalTags.map{it.name}.toList()
