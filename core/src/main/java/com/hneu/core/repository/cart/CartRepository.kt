@@ -1,9 +1,9 @@
-package com.hneu.core.datasource.cart
+package com.hneu.core.repository.cart
 
 import com.hneu.core.domain.order.Cart
 import kotlinx.coroutines.flow.Flow
 
-interface LocalCartDataSource {
+interface CartRepository {
+    fun fetchCart(): Flow<Result<Cart>>
     fun saveCart(cart: Cart): Flow<Result<Cart>>
-    fun getCart(): Flow<Result<Cart>>
 }
