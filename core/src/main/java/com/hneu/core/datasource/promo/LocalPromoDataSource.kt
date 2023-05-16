@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import com.hneu.core.domain.request.Result
 
 interface LocalPromoDataSource {
-    fun savePromos(promos: List<Promo>): Flow<Result>
-    fun getPromos(): Flow<Result>
+    fun savePromos(promos: List<Promo>): Flow<Result<List<Promo>>>
+    fun getPromos(): Flow<Result<List<Promo>>>
 }

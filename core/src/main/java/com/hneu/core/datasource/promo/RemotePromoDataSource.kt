@@ -6,5 +6,5 @@ import com.hneu.core.domain.request.Result
 
 
 interface RemotePromoDataSource {
-    fun getPromos(): Flow<Result>
+    fun getPromos(): Flow<Result<List<Promo>>>
 }

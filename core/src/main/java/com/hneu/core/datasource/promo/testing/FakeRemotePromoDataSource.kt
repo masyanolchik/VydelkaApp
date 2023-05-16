@@ -5,10 +5,11 @@ import com.hneu.core.domain.product.Tag
 import com.hneu.core.domain.promo.Promo
 import kotlinx.coroutines.flow.Flow
 import com.hneu.core.domain.request.Result
+import kotlinx.coroutines.flow.flowOf
 
 class FakeRemotePromoDataSource : RemotePromoDataSource {
-    override fun getPromos(): Flow<Result> {
-        TODO("Not yet implemented")
+    override fun getPromos(): Flow<Result<List<Promo>>> {
+        return flowOf(Result.Success(FAKE_LIST))
     }
 
     companion object {

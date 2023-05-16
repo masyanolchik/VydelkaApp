@@ -7,6 +7,6 @@ import com.hneu.core.domain.request.Result
 
 
 interface RemoteOrderDataSource {
-    fun saveOrder(order: Order): Flow<Result>
-    fun getOrders(user: User): Flow<Result>
+    fun saveOrder(order: Order, user: User): Flow<Result<Order>>
+    fun getOrders(user: User): Flow<Result<List<Order>>>
 }

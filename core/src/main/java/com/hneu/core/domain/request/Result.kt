@@ -1,8 +1,8 @@
 package com.hneu.core.domain.request
 
-sealed class Result {
-    class Loading(): Result()
-    class Success<T>(val data: T) : Result()
-    class Completed(): Result()
-    class Error(throwable: Throwable) : Result()
+sealed class Result<T> {
+    class Loading(): Result<Nothing>()
+    class Success<T>(val data: T) : Result<T>()
+    class Completed(): Result<Nothing>()
+    class Error(throwable: Throwable) : Result<Nothing>()
 }

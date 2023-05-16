@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import com.hneu.core.domain.request.Result
 
 interface LocalCartDataSource {
-    fun saveCart(cart: Cart): Flow<Result>
-    fun getCart(): Flow<Result>
+    fun saveCart(cart: Cart): Flow<Result<Cart>>
+    fun getCart(): Flow<Result<Cart>>
 }

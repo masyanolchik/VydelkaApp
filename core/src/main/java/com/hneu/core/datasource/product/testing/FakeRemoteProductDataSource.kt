@@ -10,17 +10,7 @@ import kotlinx.coroutines.flow.flowOf
 import java.math.BigDecimal
 
 class FakeRemoteProductDataSource : RemoteProductDataSource {
-    override fun getProducts(): Flow<Result> = flowOf(Result.Success(FAKE_LIST))
-
-    override fun getProductsByCategoryId(categoryId: Int): Flow<Result> {
-        return flowOf(Result.Success(FAKE_LIST.filter {
-            it.category.id == categoryId
-        }))
-    }
-
-    override fun getProductsByTags(tags: List<Tag>): Flow<Result> {
-        TODO("Not yet implemented")
-    }
+    override fun getProducts() = flowOf(Result.Success(FAKE_LIST))
 
     companion object {
         val FAKE_LIST = listOf(

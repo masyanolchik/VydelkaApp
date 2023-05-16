@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 import com.hneu.core.domain.request.Result
 
 interface LocalProductDataSource {
-    fun saveProduct(product: Product): Flow<Result>
-    fun saveProducts(products: List<Product>): Flow<Result>
-    fun getProducts(): Flow<Result>
-    fun getProductsByCategoryId(categoryId: Int): Flow<Result>
-    fun getProductsByTags(tags: List<Tag>): Flow<Result>
+    fun saveProduct(product: Product): Flow<Result<Product>>
+    fun saveProducts(products: List<Product>): Flow<Result<List<Product>>>
+    fun getProducts(): Flow<Result<List<Product>>>
+    fun getProductsByCategoryId(categoryId: Int): Flow<Result<List<Product>>>
+    fun getProductsByTags(tags: List<Tag>): Flow<Result<List<Product>>>
 }
