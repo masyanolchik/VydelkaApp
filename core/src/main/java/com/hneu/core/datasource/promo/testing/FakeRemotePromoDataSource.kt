@@ -17,7 +17,7 @@ class FakeRemotePromoDataSource : RemotePromoDataSource {
             Promo(
                 id = 0,
                 name = "Звернення",
-                titleImageSrc = "https://drama.kropyva.ch/images/thumb/f/f1/858b8f.jpg/300px-858b8f.jpg",
+                titleImageSrc = "https://i.imgur.com/ShNJtWa.png",
                 detailedDescription = "ЗВЕРНЕННЯ\n" +
                         "ДО ЙОГО БЕЗОСІБНОЇ ЯСНОВЕЛЬМОЖНОСТИ ГЕТЬМАНА КРОПИВАЧУ\n" +
                         "\n" +

@@ -6,8 +6,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PhoneIphone
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,48 +20,67 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.carousel.CarouselLayoutManager
+import com.hneu.core.domain.promo.Promo
 import com.hneu.vydelka.R
 import com.hneu.vydelka.ui.feed.components.*
 import com.hneu.vydelka.ui.feed.promo.PromoScreen
 import com.hneu.vydelka.ui.feed.testing.MockData
 import com.hneu.vydelka.ui.navigation.NavigationRoutes
+import com.hneu.core.domain.request.Result
 
 @Composable
-fun Feed(navController: NavHostController = rememberNavController()) {
+fun Feed(
+    navController: NavHostController = rememberNavController(),
+    feedViewModel: FeedViewModel = hiltViewModel()
+) {
     var openPromoScreenDialog by rememberSaveable { mutableStateOf(false) }
     var openPromoScreenTitle by rememberSaveable { mutableStateOf("") }
+
     if(openPromoScreenDialog) {
         PromoScreen(openPromoScreenTitle) {
            openPromoScreenDialog = !openPromoScreenDialog
         }
     } else {
+        feedViewModel.fetchPromos()
+        val promoListState by feedViewModel.promosStateFlow.collectAsState()
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(start = 16.dp, top = 16.dp, end = 16.dp)
         ) {
-            val promoImageAdapter = PromoImageAdapter() {
-                openPromoScreenDialog = !openPromoScreenDialog
-                openPromoScreenTitle = it.promoTitle
+            when(promoListState) {
+                is Result.Loading -> CircularProgressIndicator()
+                is Result.Success -> {
+                    val promoImageAdapter = PromoImageAdapter() {
+                        openPromoScreenDialog = !openPromoScreenDialog
+                        openPromoScreenTitle = it.promoTitle
+                    }
+                    AndroidView(
+                        modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(196.dp)
+                            .padding(vertical = 8.dp),
+                        factory = { context -> RecyclerView(context).apply {
+                            layoutManager = CarouselLayoutManager()
+                            adapter = promoImageAdapter
+                            clipChildren = false
+                            clipToPadding = false
+                        } },
+                        update = {
+                            promoImageAdapter.submitList((promoListState as Result.Success<List<Promo>>).data.map { PromoImageAdapter.PromoData(it.name, it.titleImageSrc, it.id) })
+                        },
+                    )
+                }
+                else -> {
+                    val k = 0
+                }
             }
-            AndroidView(
-                modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(196.dp)
-                    .padding(vertical = 8.dp),
-                factory = { context -> RecyclerView(context).apply {
-                    layoutManager = CarouselLayoutManager()
-                    adapter = promoImageAdapter
-                    clipChildren = false
-                    clipToPadding = false
-                } },
-                update = { promoImageAdapter.submitList(MockData.imageList) },
-            )
             // Placeholder for a real category links in the future
             Row (
                 modifier = Modifier
