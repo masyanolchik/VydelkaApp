@@ -10,13 +10,12 @@ data class Order(
     val nonRegisteredCustomerLastname: String = "",
     val nonRegisteredCustomerPhone: String = "",
     val nonRegisteredCustomerAddress: String = "",
-    val orderedProducts: List<OrderedProduct>,
-    val optionalRegisteredCustomer: User?,
+    val cart: Cart,
     val orderStatus: String,
 ) {
     fun getOrderSum() : BigDecimal {
       val overallSum = BigDecimal(0)
-      orderedProducts.forEach {
+      cart.orderedProducts.forEach {
           overallSum.add(it.product.price)
       }
       return overallSum

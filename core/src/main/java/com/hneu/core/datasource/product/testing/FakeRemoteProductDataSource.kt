@@ -3,9 +3,7 @@ package com.hneu.core.datasource.product.testing
 import com.hneu.core.datasource.category.testing.FakeRemoteCategoryDataSource
 import com.hneu.core.datasource.product.RemoteProductDataSource
 import com.hneu.core.domain.product.Product
-import com.hneu.core.domain.product.Tag
 import com.hneu.core.domain.request.Result
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import java.math.BigDecimal
 
@@ -30,7 +28,7 @@ class FakeRemoteProductDataSource : RemoteProductDataSource {
                     "https://images.samsung.com/is/image/samsung/p6pim/ua/vc07m2110sb-uk/gallery/ua-vc2100m-canister-with-anti-tangle-turbine-vc07m2110sb-uk-423746684?\$684_547_PNG\$",
                     "https://images.samsung.com/is/image/samsung/p6pim/ua/vc07m2110sb-uk/gallery/ua-vc2100m-canister-with-anti-tangle-turbine-vc07m2110sb-uk-423746685?\$684_547_PNG\$",
                 ),
-                attributes = setOf(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroup[0].attributes[0]),
+                attributes = setOf(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0].attributes[0]),
             ),
             Product(
                 id = 1,
@@ -48,7 +46,7 @@ class FakeRemoteProductDataSource : RemoteProductDataSource {
                     "https://www.dragonelectronics.mu/assets/img/sa/VC5420NHT/VC5420NHT_03.webp",
                     "https://www.dragonelectronics.mu/assets/img/sa/VC5420NHT/VC5420NHT_04.webp",
                 ),
-                attributes = setOf(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroup[0].attributes[1]),
+                attributes = setOf(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0].attributes[1]),
             ),
             Product(
                 id = 2,
@@ -66,7 +64,7 @@ class FakeRemoteProductDataSource : RemoteProductDataSource {
                     "https://content.rozetka.com.ua/goods/images/big/263855365.jpg",
                     "https://content2.rozetka.com.ua/goods/images/big/263855366.jpg",
                 ),
-                attributes = setOf(FakeRemoteCategoryDataSource.FAKE_LIST[4].attributeGroup[0].attributes[0]),
+                attributes = setOf(FakeRemoteCategoryDataSource.FAKE_LIST[4].attributeGroups[0].attributes[0]),
             ),
         )
     }

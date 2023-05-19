@@ -13,7 +13,7 @@ data class Product(
     val description: String,
     val titleImageSrc: String,
     val images: List<String>,
-    val attributes: Set<Attribute>,
+    val attributes: Set<Attribute>, // bring map here
     val additionalTags: Set<Tag> = emptySet()
 ) {
     fun getSearchTags() : List<String> {

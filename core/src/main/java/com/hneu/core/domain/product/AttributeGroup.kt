@@ -4,5 +4,4 @@ data class AttributeGroup(
     val id: Int,
     val name: String,
     val attributes: List<Attribute>,
-    var relatedCategory: Category,
 )

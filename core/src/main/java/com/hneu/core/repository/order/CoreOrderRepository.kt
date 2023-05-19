@@ -15,7 +15,7 @@ class CoreOrderRepository(
     private val localDataSource: LocalOrderDataSource,
     private val remoteDataSource: RemoteOrderDataSource,
 ) : OrderRepository {
-    override fun saveOrder(order: Order, user: User): Flow<Result<Order>> {
+    override fun saveOrder(order: Order, user: User?): Flow<Result<Order>> {
         return remoteDataSource
             .saveOrder(order, user)
             .flatMapLatest { result ->
