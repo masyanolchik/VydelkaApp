@@ -3,16 +3,88 @@ package com.hneu.vydelka.datasource.category
 import com.hneu.core.datasource.category.LocalCategoryDataSource
 import com.hneu.core.domain.product.Category
 import com.hneu.core.domain.request.Result
+import com.hneu.vydelka.localdatabase.product.attribute.AttributeDao
+import com.hneu.vydelka.localdatabase.product.attribute.fromDomain
+import com.hneu.vydelka.localdatabase.product.attributegroup.AttributeGroupAttributesCrossRef
+import com.hneu.vydelka.localdatabase.product.attributegroup.AttributeGroupDao
+import com.hneu.vydelka.localdatabase.product.attributegroup.fromDomain
+import com.hneu.vydelka.localdatabase.product.category.CategoryAttributeGroupsCrossRef
 import com.hneu.vydelka.localdatabase.product.category.CategoryDao
+import com.hneu.vydelka.localdatabase.product.category.LocalCategory
+import com.hneu.vydelka.localdatabase.product.category.LocalCategoryWithLocalAttributeGroups
+import com.hneu.vydelka.localdatabase.product.category.fromDomain
+import com.hneu.vydelka.localdatabase.product.category.toDomain
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
-class RoomCategoryDataSource @Inject constructor(private val categoryDao: CategoryDao): LocalCategoryDataSource{
+class RoomCategoryDataSource @Inject constructor(
+    private val categoryDao: CategoryDao,
+    private val attributeGroupDao: AttributeGroupDao,
+    private val attributeDao: AttributeDao,
+): LocalCategoryDataSource{
     override fun saveCategories(categories: List<Category>): Flow<Result<List<Category>>> {
-        TODO("Not yet implemented")
+        return try {
+            categories.forEach {
+                if(it.parentCategory != null) {
+                    saveCategory(it)
+                }
+            }
+            getCategories()
+        } catch (e: Exception) {
+            return flowOf(Result.Error(e))
+        }
     }
 
     override fun getCategories(): Flow<Result<List<Category>>> {
-        TODO("Not yet implemented")
+        return try {
+            val localCategoriesWithFields = categoryDao.getCategoriesWithAttributes()
+            flowOf(Result.Success(localCategoriesWithFields.map { it.toDomain(it.getParentCategory(categoryDao)) }))
+        } catch (e: Exception) {
+            flowOf(Result.Error(e))
+        }
+    }
+
+    private fun saveCategory(category: Category?) {
+        try {
+            if(category?.parentCategory != null) {
+                saveCategory(category.parentCategory)
+            }
+            if(category != null) {
+                val localCategory = category.fromDomain()
+                categoryDao.addCategory(localCategory)
+                category.attributeGroups.forEach { attrGroup ->
+                    val localGroup = attrGroup.fromDomain()
+                    attributeGroupDao.addAttributeGroup(localGroup)
+                    attrGroup.attributes.forEach { attr ->
+                        val localAttribute = attr.fromDomain()
+                        attributeDao.addAttribute(localAttribute)
+                        attributeGroupDao.addAttributeGroupAttributesCrossRef(
+                            AttributeGroupAttributesCrossRef(
+                                attributeGroupId = localGroup.attributeGroupId,
+                                attributeId = localAttribute.attributeId
+                            )
+                        )
+                    }
+                    categoryDao.addCategoryAttributeGroupsCrossRef(
+                        CategoryAttributeGroupsCrossRef(
+                            categoryId = localCategory.categoryId,
+                            attributeGroupId = attrGroup.id
+                        )
+                    )
+            }
+          }
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    private fun LocalCategoryWithLocalAttributeGroups.getParentCategory(categoryDao: CategoryDao): Category {
+        return if(localCategory.parentCategoryId != null) {
+            val parentLocalCategoryWithLocalAttributeGroups = categoryDao.getCategoryByIdWithAttributes(localCategory.parentCategoryId)
+            this.toDomain(parentLocalCategoryWithLocalAttributeGroups.getParentCategory(categoryDao))
+        } else {
+            this.toDomain(null)
+        }
     }
 }

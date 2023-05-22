@@ -43,4 +43,4 @@ fun LocalCategoryWithLocalAttributeGroups.toDomain(parentCategory: Category?): C
 
 
 fun Category.fromDomain() =
-    Pair(LocalCategory(id, name, parentCategory?.id), attributeGroups.map { CategoryAttributeGroupsCrossRef(id, it.id) })
+    LocalCategory(id, name, parentCategory?.id)

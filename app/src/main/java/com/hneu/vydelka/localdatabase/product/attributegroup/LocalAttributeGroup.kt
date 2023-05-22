@@ -33,7 +33,4 @@ fun LocalAttributeGroupWithAllowedValues.toDomain() =
     )
 
 fun AttributeGroup.fromDomain() =
-    Pair(
-        LocalAttributeGroup(id, name),
-        attributes.map { AttributeGroupAttributesCrossRef(id,it.id)}
-    )
+        LocalAttributeGroup(id, name)

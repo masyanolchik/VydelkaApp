@@ -13,6 +13,12 @@ interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addCategory(localCategory: LocalCategory): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addCategoryAttributeGroupsCrossRef(categoryAttributeGroupsCrossRef: CategoryAttributeGroupsCrossRef)
+
+    @Delete
+    fun deleteCategoryAttributeGroupsCrossRef(categoryAttributeGroupsCrossRef: CategoryAttributeGroupsCrossRef)
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateAttribute(localCategory: LocalCategory)
 
