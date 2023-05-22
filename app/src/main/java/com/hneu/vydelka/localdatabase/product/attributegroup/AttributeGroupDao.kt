@@ -15,7 +15,7 @@ interface AttributeGroupDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addAttributeGroup(localAttributeGroup: LocalAttributeGroup): Long
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateAttributeGroup(localAttributeGroup: LocalAttributeGroup)
 
     @Delete

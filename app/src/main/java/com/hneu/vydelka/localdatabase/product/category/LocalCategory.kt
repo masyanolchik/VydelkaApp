@@ -32,13 +32,15 @@ fun LocalCategory.toDomain(parentCategory: Category?, allowedAttributeGroupValue
         categoryId,
     )
 
-fun LocalCategoryWithLocalAttributeGroups.toDomain(parentCategory: Category?) =
-    Category(
+fun LocalCategoryWithLocalAttributeGroups.toDomain(parentCategory: Category?): Category {
+    return Category(
         localCategory.name,
         parentCategory,
         allowedAttributeValues.map { it.toDomain() },
         localCategory.categoryId,
     )
+}
+
 
 fun Category.fromDomain() =
     Pair(LocalCategory(id, name, parentCategory?.id), attributeGroups.map { CategoryAttributeGroupsCrossRef(id, it.id) })

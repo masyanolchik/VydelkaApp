@@ -13,7 +13,7 @@ interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addCategory(localCategory: LocalCategory): Long
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateAttribute(localCategory: LocalCategory)
 
     @Delete

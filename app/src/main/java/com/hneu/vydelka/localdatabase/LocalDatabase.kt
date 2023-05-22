@@ -2,6 +2,13 @@ package com.hneu.vydelka.localdatabase
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.hneu.vydelka.localdatabase.order.LocalOrder
+import com.hneu.vydelka.localdatabase.order.OrderDao
+import com.hneu.vydelka.localdatabase.order.cart.CartDao
+import com.hneu.vydelka.localdatabase.order.cart.CartOrderedProductsCrossRef
+import com.hneu.vydelka.localdatabase.order.cart.LocalCart
+import com.hneu.vydelka.localdatabase.order.orderedproduct.LocalOrderedProduct
+import com.hneu.vydelka.localdatabase.order.orderedproduct.OrderedProductDao
 import com.hneu.vydelka.localdatabase.product.LocalProduct
 import com.hneu.vydelka.localdatabase.product.LocalProductWithAdditionalFields
 import com.hneu.vydelka.localdatabase.product.ProductAdditionalImagesCrossRef
@@ -25,9 +32,22 @@ import com.hneu.vydelka.localdatabase.product.tag.TagDao
 import com.hneu.vydelka.localdatabase.promo.LocalPromo
 import com.hneu.vydelka.localdatabase.promo.PromoDao
 import com.hneu.vydelka.localdatabase.promo.PromoTagsCrossRef
+import com.hneu.vydelka.localdatabase.user.LocalUser
+import com.hneu.vydelka.localdatabase.user.UserDao
+import com.hneu.vydelka.localdatabase.user.UserOrderHistoryCrossRef
+import com.hneu.vydelka.localdatabase.user.UserProductFavoriteCrossRef
+import com.hneu.vydelka.localdatabase.user.UserProductHistoryCrossRef
 
 @Database(
     entities = [
+        LocalUser::class,
+        UserOrderHistoryCrossRef::class,
+        UserProductFavoriteCrossRef::class,
+        UserProductHistoryCrossRef::class,
+        LocalOrder::class,
+        LocalCart::class,
+        CartOrderedProductsCrossRef::class,
+        LocalOrderedProduct::class,
         LocalAdditionalImage::class,
         LocalAttribute::class,
         LocalAttributeGroup::class,
@@ -46,6 +66,11 @@ import com.hneu.vydelka.localdatabase.promo.PromoTagsCrossRef
     exportSchema = false,
 )
 abstract class LocalDatabase : RoomDatabase() {
+
+    abstract fun userDao(): UserDao
+    abstract fun orderDao(): OrderDao
+    abstract fun cartDao(): CartDao
+    abstract fun orderedProductDao(): OrderedProductDao
     abstract fun additionalImageDao(): AdditionalImageDao
     abstract fun attributeDao(): AttributeDao
 

@@ -8,3 +8,7 @@ data class LocalAdditionalImage (
     @PrimaryKey val additionalImageId: Int,
     val additionalImageSrc: String,
 )
+
+fun LocalAdditionalImage.toDomain() = additionalImageSrc
+
+fun String.fromDomainToLocalAdditionalImage(id: Int) = LocalAdditionalImage(id, this)

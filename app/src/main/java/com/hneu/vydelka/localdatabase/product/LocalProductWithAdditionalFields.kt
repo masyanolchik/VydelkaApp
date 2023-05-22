@@ -5,10 +5,18 @@ import androidx.room.Junction
 import androidx.room.Relation
 import com.hneu.vydelka.localdatabase.product.additionalimage.LocalAdditionalImage
 import com.hneu.vydelka.localdatabase.product.attribute.LocalAttribute
+import com.hneu.vydelka.localdatabase.product.category.LocalCategory
+import com.hneu.vydelka.localdatabase.product.category.LocalCategoryWithLocalAttributeGroups
 import com.hneu.vydelka.localdatabase.product.tag.LocalTag
 
 data class LocalProductWithAdditionalFields(
     @Embedded val localProduct: LocalProduct,
+    @Relation(
+        entity = LocalCategory::class,
+        parentColumn = "productId",
+        entityColumn = "categoryId"
+    )
+    val localCategory: LocalCategoryWithLocalAttributeGroups,
     @Relation(
         parentColumn = "productId",
         entityColumn = "tagId",

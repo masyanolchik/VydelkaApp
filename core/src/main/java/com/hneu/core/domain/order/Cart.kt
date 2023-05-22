@@ -4,7 +4,8 @@ import com.hneu.core.domain.user.User
 import com.hneu.core.domain.product.Product
 
 class Cart(
-    val optionalUser: User?,
+    val id: Int,
+    val optionalUserId: Int?,
     val orderedProducts: MutableList<OrderedProduct>
 ) {
     fun addProductToCart(product: Product): Boolean {
@@ -12,7 +13,7 @@ class Cart(
         return if(productsInCart.contains(product)) {
             false
         } else {
-            orderedProducts.add(OrderedProduct(product, 1))
+            orderedProducts.add(OrderedProduct(0, product, 1))
         }
     }
 
@@ -20,7 +21,7 @@ class Cart(
         var productQuantityChanged = false
         orderedProducts.find { it.product.id == product.id }?.let {
             if(desiredQuantity != 0) {
-                orderedProducts[orderedProducts.indexOf(it)] = OrderedProduct(product, desiredQuantity)
+                orderedProducts[orderedProducts.indexOf(it)] = OrderedProduct(0, product, desiredQuantity)
                 productQuantityChanged = true
             }
         }

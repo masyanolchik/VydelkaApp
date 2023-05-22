@@ -55,6 +55,7 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:2.44"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt "org.xerial:sqlite-jdbc:3.36.0" // Only for computer with M1 CPU
     // To use Kotlin annotation processing tool (kapt)
     kapt "androidx.room:room-compiler:$room_version"
     implementation 'androidx.core:core-ktx:1.10.0'

@@ -13,7 +13,7 @@ interface AttributeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addAttribute(localAttribute: LocalAttribute): Long
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateAttribute(localAttribute: LocalAttribute)
 
     @Delete

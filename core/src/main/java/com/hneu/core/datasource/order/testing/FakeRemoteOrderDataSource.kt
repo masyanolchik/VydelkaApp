@@ -31,24 +31,24 @@ class FakeRemoteOrderDataSource : RemoteOrderDataSource {
             favoriteProducts = emptyList(),
         )
         private val FAKE_ORDERED_PRODUCTS_1 = mutableListOf(
-            OrderedProduct(FakeRemoteProductDataSource.FAKE_LIST[0], 1),
-            OrderedProduct(FakeRemoteProductDataSource.FAKE_LIST[1], 1),
+            OrderedProduct(0, FakeRemoteProductDataSource.FAKE_LIST[0], 1),
+            OrderedProduct(1, FakeRemoteProductDataSource.FAKE_LIST[1], 1),
         )
         private val FAKE_ORDERED_PRODUCTS_2 = mutableListOf(
-            OrderedProduct(FakeRemoteProductDataSource.FAKE_LIST[1], 3),
-            OrderedProduct(FakeRemoteProductDataSource.FAKE_LIST[2], 2),
+            OrderedProduct(2, FakeRemoteProductDataSource.FAKE_LIST[1], 3),
+            OrderedProduct(3, FakeRemoteProductDataSource.FAKE_LIST[2], 2),
         )
         val FAKE_ORDERS = mutableListOf(
             Order(
                 id = 0,
                 dateOfOrder = "09:10 2022.03.04",
-                cart = Cart(FAKE_USER, FAKE_ORDERED_PRODUCTS_1),
+                cart = Cart(0, FAKE_USER.id, FAKE_ORDERED_PRODUCTS_1),
                 orderStatus = "В процесі",
             ),
             Order(
                 id = 1,
                 dateOfOrder = "21:10 2022.04.21",
-                cart = Cart(FAKE_USER, FAKE_ORDERED_PRODUCTS_2),
+                cart = Cart(1, FAKE_USER.id, FAKE_ORDERED_PRODUCTS_2),
                 orderStatus = "Закінчено",
             ),
         )

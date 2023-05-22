@@ -3,7 +3,17 @@ package com.hneu.vydelka.localdatabase.product
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.hneu.core.domain.product.Attribute
+import com.hneu.core.domain.product.AttributeGroup
+import com.hneu.core.domain.product.Category
+import com.hneu.core.domain.product.Product
+import com.hneu.core.domain.product.Tag
+import com.hneu.vydelka.localdatabase.product.additionalimage.toDomain
+import com.hneu.vydelka.localdatabase.product.attribute.toDomain
 import com.hneu.vydelka.localdatabase.product.category.LocalCategory
+import com.hneu.vydelka.localdatabase.product.category.toDomain
+import com.hneu.vydelka.localdatabase.product.tag.toDomain
+import java.math.BigDecimal
 
 @Entity(
     tableName = "products",
@@ -23,7 +33,54 @@ data class LocalProduct (
     val status: String,
     val warrantyLengthMonth: Int,
     val returnExchangeLength: Int,
-    val dateOfOrder: String,
     val description: String,
     val titleImageSrc: String,
 )
+
+fun LocalProduct.toDomain(
+    category: Category,
+    additionalImages: List<String>,
+    attributes: Map<AttributeGroup, Attribute>,
+    additionalTags: Set<Tag> = emptySet(),
+) =
+    Product(
+        id = productId,
+        name = name,
+        price = BigDecimal(price),
+        status = status,
+        warrantyLengthMonth = warrantyLengthMonth,
+        returnExchangeLength = returnExchangeLength,
+        category = category,
+        description = description,
+        titleImageSrc = titleImageSrc,
+        images = additionalImages,
+        attributes = attributes,
+        additionalTags = additionalTags
+    )
+
+fun LocalProductWithAdditionalFields.toDomain(parentCategory: Category? = null) : Product {
+    val category = localCategory.toDomain(parentCategory)
+    val attrList = attributeList.map { it.toDomain() }
+    val attrMap = mutableMapOf<AttributeGroup, Attribute>()
+    attrList.forEach() { attr ->
+        val group = category.attributeGroups.find {group -> group.attributes.contains(attr)}
+        if(group != null) attrMap[group] = attr
+    }
+    category.attributeGroups
+    return Product(
+        id = localProduct.productId,
+        name = localProduct.name,
+        price = BigDecimal(localProduct.price),
+        status = localProduct.status,
+        warrantyLengthMonth = localProduct.warrantyLengthMonth,
+        returnExchangeLength = localProduct.returnExchangeLength,
+        category = category,
+        description = localProduct.description,
+        titleImageSrc = localProduct.titleImageSrc,
+        images = additionalImages.map { it.toDomain() },
+        attributes = attrMap,
+        additionalTags = tagList.map{ it.toDomain() }.toSet()
+    )
+}
+
+
