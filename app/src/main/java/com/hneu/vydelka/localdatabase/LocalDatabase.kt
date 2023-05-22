@@ -62,7 +62,7 @@ import com.hneu.vydelka.localdatabase.user.UserProductHistoryCrossRef
         ProductAttributesCrossRef::class,
         ProductTagsCrossRef::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = false,
 )
 abstract class LocalDatabase : RoomDatabase() {

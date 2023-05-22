@@ -46,9 +46,10 @@ fun Feed(
            openPromoScreenDialog = !openPromoScreenDialog
         }
     } else {
-        feedViewModel.fetchPromos()
         val promoListState by feedViewModel.promosStateFlow.collectAsState()
         Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(start = 16.dp, top = 16.dp, end = 16.dp)

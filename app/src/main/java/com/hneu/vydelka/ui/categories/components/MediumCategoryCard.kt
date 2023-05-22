@@ -1,10 +1,12 @@
 package com.hneu.vydelka.ui.categories.components
 
+import android.service.autofill.OnClickAction
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.PhoneIphone
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +24,13 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MediumCategoryCard(title:String, imageVector: ImageVector, contentDescription: String, selected:Boolean = false) {
+fun MediumCategoryCard(
+    title:String = "",
+    imageVector: ImageVector = Icons.Outlined.Error,
+    contentDescription: String = "",
+    selected:Boolean = false,
+    onClick: () -> Unit = {},
+) {
     val buttonColor = if(selected)MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.secondaryContainer
     val onButtonColor = if(selected)MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSecondaryContainer
     Card(
@@ -31,7 +39,7 @@ fun MediumCategoryCard(title:String, imageVector: ImageVector, contentDescriptio
             .width(110.dp),
         shape = ShapeDefaults.Large,
         backgroundColor = buttonColor,
-        onClick = {},
+        onClick = onClick,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

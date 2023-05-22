@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,11 +22,16 @@ class FeedViewModel @Inject constructor(
         MutableStateFlow(Result.Loading())
     val promosStateFlow = _promosStateFlow
 
+    init {
+        fetchPromos()
+    }
+
     fun fetchPromos() {
         viewModelScope.launch {
             promoRepository
                 .fetchPromos()
                 .flowOn(Dispatchers.IO)
+                .distinctUntilChanged()
                 .collectLatest {
                     _promosStateFlow.emit(it)
                 }

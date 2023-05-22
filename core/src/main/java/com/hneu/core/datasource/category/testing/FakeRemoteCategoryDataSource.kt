@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeRemoteCategoryDataSource: RemoteCategoryDataSource {
-    override fun getCategories(): Flow<Result<List<Category>>> = flowOf(Result.Success(FAKE_LIST))
+    override fun getCategories(): Flow<Result<List<Category>>> =
+        flowOf(Result.Success(FAKE_LIST))
 
     companion object {
         val FAKE_ATTRIBUTES_FOR_VACUUM_CLEANERS = listOf(
