@@ -82,6 +82,36 @@ class FakeRemoteCategoryDataSource: RemoteCategoryDataSource {
                 name = "Мобільні телефони",
                 attributeGroups = mutableListOf(),
             ),
+            Category(
+                id = 5,
+                name = "Портативна техніка",
+                attributeGroups = mutableListOf(),
+            ),
+            Category(
+                id = 6,
+                name = "Телевізори",
+                attributeGroups = mutableListOf(),
+            ),
+            Category(
+                id = 7,
+                name = "Комп'ютери та комп'ютерна техніка",
+                attributeGroups = mutableListOf(),
+            ),
+            Category(
+                id = 8,
+                name = "Авто",
+                attributeGroups = mutableListOf(),
+            ),
+            Category(
+                id = 9,
+                name = "Інструменти",
+                attributeGroups = mutableListOf(),
+            ),
+            Category(
+                id = 10,
+                name = "Сад, дача",
+                attributeGroups = mutableListOf(),
+            ),
         ).also {
             it[1].parentCategory = it[0]
             it[2].parentCategory = it[1]

@@ -8,6 +8,7 @@ import com.hneu.core.domain.request.Result
 interface LocalProductDataSource {
     fun saveProduct(product: Product): Flow<Result<Product>>
     fun saveProducts(products: List<Product>): Flow<Result<List<Product>>>
+    fun getProductById(productId: Int): Flow<Result<Product>>
     fun getProducts(): Flow<Result<List<Product>>>
     fun getProductsByCategoryId(categoryId: Int): Flow<Result<List<Product>>>
     fun getProductsByTags(tags: List<Tag>): Flow<Result<List<Product>>>

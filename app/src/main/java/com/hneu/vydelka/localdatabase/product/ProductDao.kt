@@ -19,9 +19,18 @@ interface ProductDao {
     @Delete
     fun deleteProduct(localProduct: LocalProduct)
 
+
     @Transaction
     @Query("SELECT * from products WHERE productId=:productId")
-    fun getAllProducts(productId:Int): List<LocalProductWithAdditionalFields>
+    fun getProduct(productId:Int): LocalProductWithAdditionalFields
+
+    @Transaction
+    @Query("SELECT * from products WHERE categoryId=:categoryId")
+    fun getProductByCategoryId(categoryId: Int): List<LocalProductWithAdditionalFields>
+
+    @Transaction
+    @Query("SELECT * from products")
+    fun getAllProducts(): List<LocalProductWithAdditionalFields>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertProductAdditionalImagesCrossRef(productAdditionalImagesCrossRef: ProductAdditionalImagesCrossRef)

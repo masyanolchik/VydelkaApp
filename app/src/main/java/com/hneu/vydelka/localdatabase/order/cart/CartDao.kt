@@ -27,5 +27,5 @@ interface CartDao {
 
     @Transaction
     @Query("SELECT * from carts WHERE userId=:userId")
-    fun getUserCart(userId: Int): List<LocalCartWithAdditionalFields>
+    fun getUserCart(userId: Int): LocalCartWithAdditionalFields
 }

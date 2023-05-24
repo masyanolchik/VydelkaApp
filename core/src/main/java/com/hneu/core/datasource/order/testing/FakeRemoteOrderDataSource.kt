@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flowOf
 
 class FakeRemoteOrderDataSource : RemoteOrderDataSource {
     override fun saveOrder(order: Order, user: User?): Flow<Result<Order>> {
-        TODO("Not yet implemented")
+        return flowOf(Result.Completed())
     }
 
     override fun getOrders(user: User): Flow<Result<List<Order>>> {
@@ -22,6 +22,8 @@ class FakeRemoteOrderDataSource : RemoteOrderDataSource {
     companion object {
         private val FAKE_USER = User (
             id = 0,
+            username = "robnina",
+            password = "ssss",
             name = "TikTak",
             lastname = "Robina",
             phoneNumber = "0988537640",

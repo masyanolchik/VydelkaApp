@@ -6,5 +6,5 @@ import com.hneu.core.domain.request.Result
 
 interface LocalCartDataSource {
     fun saveCart(cart: Cart): Flow<Result<Cart>>
-    fun getCart(): Flow<Result<Cart>>
+    fun getCart(userId:Int): Flow<Result<Cart>>
 }

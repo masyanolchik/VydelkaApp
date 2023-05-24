@@ -37,6 +37,15 @@ interface UserDao {
     @Delete
     fun deleteUser(localUser: LocalUser)
 
+    @Query("SELECT EXISTS (SELECT * FROM users WHERE username=:userName)")
+    fun isUserExists(userName: String): Boolean
+
+    @Query("SELECT * from users WHERE username=:userName")
+    fun getUserByUsername(userName: String): LocalUserWithAdditionalFields
+
+    @Query("SELECT EXISTS (SELECT * FROM users WHERE userId=:userId)")
+    fun isUserExists(userId: Int): Boolean
+
     @Query("SELECT * from users WHERE userId=:userId")
     fun getUserById(userId: Int): LocalUser
 

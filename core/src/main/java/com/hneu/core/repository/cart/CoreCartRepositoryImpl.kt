@@ -7,7 +7,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CoreCartRepositoryImpl(private val localDataSource: LocalCartDataSource) : CartRepository {
-    override fun fetchCart() = localDataSource.getCart()
+    override fun fetchCart(userId: Int) = localDataSource.getCart(userId)
 
     override fun saveCart(cart: Cart) = localDataSource.saveCart(cart)
 }

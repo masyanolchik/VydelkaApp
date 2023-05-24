@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import com.hneu.core.domain.request.Result
 
 interface LocalFavoriteDataSource {
-    fun addToFavorites(product: Product): Flow<Result<Product>>
-    fun getFavorites(): Flow<Result<List<Product>>>
-    fun removeFromFavorites(product: Product): Flow<Result<Product>>
+    fun addToFavorites(userId: Int, product: Product): Flow<Result<Product>>
+    fun getFavorites(userId: Int): Flow<Result<List<Product>>>
+    fun removeFromFavorites(userId: Int, product: Product): Flow<Result<Product>>
 }

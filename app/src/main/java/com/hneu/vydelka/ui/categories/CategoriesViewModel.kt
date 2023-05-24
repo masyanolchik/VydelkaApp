@@ -1,23 +1,29 @@
 package com.hneu.vydelka.ui.categories
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CameraAlt
+import androidx.compose.material.icons.outlined.Computer
+import androidx.compose.material.icons.outlined.ElectricCar
 import androidx.compose.material.icons.outlined.Error
+import androidx.compose.material.icons.outlined.Handyman
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.HomeMax
 import androidx.compose.material.icons.outlined.PhoneAndroid
+import androidx.compose.material.icons.outlined.Tv
+import androidx.compose.material.icons.outlined.Yard
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hneu.core.domain.product.Category
-import com.hneu.core.domain.promo.Promo
 import com.hneu.core.domain.request.Result
 import com.hneu.core.usecase.category.FetchCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,13 +40,34 @@ class CategoriesViewModel @Inject constructor(
 
     private val _categoryTree =
         MutableStateFlow<Result<List<CategoryNode>>>(Result.Loading())
-    val categoryTree = _categoryTree
+    val categoryTree : Flow<Result<List<CategoryNode>>>
+        get() = _categoryList
+                .map { result ->
+                    when(result) {
+                        is Result.Success -> {
+                            val categoryNodes = result.data
+                            categoryNodes.forEach {  categoryNode ->
+                                categoryNode.category.parentCategory?.let { category: Category ->
+                                    categoryNodes.find { category.id == it.category.id }?.directChildren?.add(categoryNode)
+                                }
+                            }
+                            Result.Success(categoryNodes.filter { it.category.parentCategory == null })
+                        }
+                        is Result.Completed -> Result.Completed()
+                        is Result.Error -> Result.Error(result.throwable)
+                        is Result.Loading -> Result.Loading()
+                    }
+                }
+
+    private val _categoryList =
+        MutableStateFlow<Result<List<CategoryNode>>>(Result.Loading())
+    val categoryList = _categoryList
 
     init {
-        fetchCategoryTree()
+        fetchCategoryList()
     }
 
-    fun fetchCategoryTree() {
+    fun fetchCategoryList() {
         viewModelScope.launch {
             fetchCategoryUseCase.invoke()
                 .flowOn(Dispatchers.IO)
@@ -51,8 +78,14 @@ class CategoriesViewModel @Inject constructor(
                             val categoryNodes = result.data
                                 .map {
                                     val categoryIcon = when(it.name) {
-                                        "Побутова техніка" -> Icons.Outlined.Home
-                                        "Мобільний зв'язок" -> Icons.Outlined.PhoneAndroid
+                                        "Побутова техніка", "Пилососи" -> Icons.Outlined.Home
+                                        "Мобільний зв'язок", "Мобільні телефони" -> Icons.Outlined.PhoneAndroid
+                                        "Портативна техніка" -> Icons.Outlined.CameraAlt
+                                        "Телевізори" -> Icons.Outlined.Tv
+                                        "Комп'ютери та комп'ютерна техніка" -> Icons.Outlined.Computer
+                                        "Авто" -> Icons.Outlined.ElectricCar
+                                        "Інструменти" -> Icons.Outlined.Handyman
+                                        "Сад, дача" -> Icons.Outlined.Yard
                                          else -> Icons.Outlined.Error
                                     }
                                     CategoryNode(
@@ -61,13 +94,7 @@ class CategoriesViewModel @Inject constructor(
                                         directChildren = mutableSetOf(),
                                     )
                                 }
-                            categoryNodes.forEach {  categoryNode ->
-                                categoryNode.category.parentCategory?.let { category: Category ->
-                                    categoryNodes.find { category.id == it.category.id }?.directChildren?.add(categoryNode)
-                                }
-                            }
-                            val filteredNodes = Result.Success(categoryNodes.filter { it.category.parentCategory == null })
-                            _categoryTree.emit(filteredNodes)
+                            _categoryList.emit(Result.Success(categoryNodes))
                         }
                         is Result.Completed -> _categoryTree.emit(Result.Completed())
                         is Result.Error -> _categoryTree.emit(Result.Error(result.throwable))

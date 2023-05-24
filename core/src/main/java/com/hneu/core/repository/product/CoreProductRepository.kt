@@ -28,6 +28,10 @@ class CoreProductRepository(
             }
     }
 
+    override fun getProductById(productId: Int): Flow<Result<Product>> {
+        return localDataSource.getProductById(productId)
+    }
+
     override fun getProductsByCategoryId(categoryId: Int): Flow<Result<List<Product>>> {
         return localDataSource.getProductsByCategoryId(categoryId)
     }

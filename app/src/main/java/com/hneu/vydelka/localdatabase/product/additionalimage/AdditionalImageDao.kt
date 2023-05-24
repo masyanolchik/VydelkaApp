@@ -10,7 +10,7 @@ import androidx.room.Update
 @Dao
 interface AdditionalImageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addAdditionalImage(localAdditionalImage: LocalAdditionalImage)
+    fun addAdditionalImage(localAdditionalImage: LocalAdditionalImage): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateAdditionalImage(localAdditionalImage: LocalAdditionalImage)

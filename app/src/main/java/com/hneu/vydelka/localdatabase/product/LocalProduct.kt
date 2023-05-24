@@ -83,4 +83,17 @@ fun LocalProductWithAdditionalFields.toDomain(parentCategory: Category? = null) 
     )
 }
 
+fun Product.fromDomain() =
+    LocalProduct(
+        productId = id,
+        categoryId = category.id,
+        name = name,
+        price = price.toPlainString(),
+        status = status,
+        warrantyLengthMonth = warrantyLengthMonth,
+        returnExchangeLength = returnExchangeLength,
+        description = description,
+        titleImageSrc = titleImageSrc,
+    )
+
 

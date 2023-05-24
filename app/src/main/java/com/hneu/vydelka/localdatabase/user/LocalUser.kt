@@ -12,6 +12,8 @@ import com.hneu.vydelka.localdatabase.product.toDomain
 @Entity(tableName="users")
 data class LocalUser(
     @PrimaryKey val userId: Int,
+    @ColumnInfo(name = "username") val userName: String,
+    @ColumnInfo(name = "password") val password: String,
     @ColumnInfo(name ="name") val name: String,
     @ColumnInfo(name = "lastname") val lastName: String,
     @ColumnInfo(name = "phone_number") val phoneNumber: String,
@@ -21,6 +23,8 @@ data class LocalUser(
 fun LocalUserWithAdditionalFields.toDomain() =
     User(
         id = localUser.userId,
+        username = localUser.userName,
+        password = localUser.password,
         name = localUser.name,
         lastname = localUser.lastName,
         phoneNumber = localUser.phoneNumber,
@@ -33,6 +37,8 @@ fun LocalUserWithAdditionalFields.toDomain() =
 fun User.fromDomain() =
     LocalUser(
         userId = id,
+        userName = username,
+        password = password,
         name = name,
         lastName = lastname,
         phoneNumber = phoneNumber,

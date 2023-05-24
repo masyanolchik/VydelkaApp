@@ -27,6 +27,8 @@ class RoomCategoryDataSource @Inject constructor(
             categories.forEach {
                 if(it.parentCategory != null) {
                     saveCategory(it)
+                } else {
+                    categoryDao.addCategory(it.fromDomain())
                 }
             }
             getCategories()

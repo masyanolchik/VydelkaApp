@@ -7,6 +7,7 @@ import com.hneu.core.domain.request.Result
 
 interface ProductRepository {
     fun fetchProducts(): Flow<Result<List<Product>>>
+    fun getProductById(productId: Int): Flow<Result<Product>>
     fun getProductsByCategoryId(categoryId: Int): Flow<Result<List<Product>>>
     fun getProductsByTags(tags: List<Tag>): Flow<Result<List<Product>>>
 }

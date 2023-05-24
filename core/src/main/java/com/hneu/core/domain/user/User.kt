@@ -5,6 +5,8 @@ import com.hneu.core.domain.product.Product
 
 data class User(
     val id: Int,
+    val username: String,
+    val password: String,
     val name: String,
     val lastname: String,
     val phoneNumber: String,

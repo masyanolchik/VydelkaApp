@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "additional_images")
 data class LocalAdditionalImage (
-    @PrimaryKey val additionalImageId: Int,
+    @PrimaryKey(autoGenerate = true) val additionalImageId: Int = 0,
     val additionalImageSrc: String,
 )
 
 fun LocalAdditionalImage.toDomain() = additionalImageSrc
 
-fun String.fromDomainToLocalAdditionalImage(id: Int) = LocalAdditionalImage(id, this)
+fun String.fromDomainToLocalAdditionalImage() = LocalAdditionalImage(additionalImageSrc = this)

@@ -37,7 +37,7 @@ fun Categories(
     navController: NavHostController = rememberNavController(),
     categoriesViewModel: CategoriesViewModel = hiltViewModel(),
 ) {
-    val categoryNodes by categoriesViewModel.categoryTree.collectAsState()
+    val categoryNodes by categoriesViewModel.categoryTree.collectAsState(initial = Result.Loading())
     Column(
         modifier = Modifier
             .padding(start = 16.dp, top = 16.dp, end = 16.dp),
