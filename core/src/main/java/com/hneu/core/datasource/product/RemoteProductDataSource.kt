@@ -7,4 +7,5 @@ import com.hneu.core.domain.request.Result
 
 interface RemoteProductDataSource {
     fun getProducts(): Flow<Result<List<Product>>>
+    fun getTopProducts(): Flow<Result<List<Product>>>
 }

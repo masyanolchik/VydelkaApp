@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
-class RoomProductDataSource /*@Inject*/ constructor(
+class RoomProductDataSource @Inject constructor(
     private val productDao: ProductDao,
     private val categoryDao: CategoryDao,
     private val attributeGroupDao: AttributeGroupDao,

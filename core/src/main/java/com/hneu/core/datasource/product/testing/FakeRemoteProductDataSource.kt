@@ -4,11 +4,14 @@ import com.hneu.core.datasource.category.testing.FakeRemoteCategoryDataSource
 import com.hneu.core.datasource.product.RemoteProductDataSource
 import com.hneu.core.domain.product.Product
 import com.hneu.core.domain.request.Result
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import java.math.BigDecimal
 
 class FakeRemoteProductDataSource : RemoteProductDataSource {
     override fun getProducts() = flowOf(Result.Success(FAKE_LIST))
+
+    override fun getTopProducts() = flowOf(Result.Success(listOf(FAKE_LIST[0],FAKE_LIST[2])))
 
     companion object {
         val FAKE_LIST = listOf(

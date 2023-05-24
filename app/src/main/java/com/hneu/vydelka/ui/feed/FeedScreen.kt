@@ -1,7 +1,12 @@
 package com.hneu.vydelka.ui.feed
 
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -24,10 +29,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.carousel.CarouselLayoutManager
+import com.hneu.core.domain.product.Product
 import com.hneu.core.domain.promo.Promo
 import com.hneu.vydelka.R
 import com.hneu.vydelka.ui.feed.components.*
@@ -51,7 +58,7 @@ fun Feed(
            openPromoScreenDialog = !openPromoScreenDialog
         }
     } else {
-        val promoListState by feedViewModel.promosStateFlow.collectAsState()
+        val promoListState by feedViewModel.promosStateFlow.collectAsStateWithLifecycle()
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -92,11 +99,9 @@ fun Feed(
             when(categoryList) {
                 is Result.Loading -> CircularProgressIndicator()
                 is Result.Success -> {
-                    val catToShow = remember(categoryList) {
-                        (categoryList as Result.Success<List<CategoriesViewModel.CategoryNode>>).data
-                            .filter { categoryNode -> categoryNode.category.attributeGroups.isNotEmpty() }
-                            .take(8)
-                    }
+                    val catToShow = (categoryList as Result.Success<List<CategoriesViewModel.CategoryNode>>).data
+                        .filter { categoryNode -> categoryNode.category.attributeGroups.isNotEmpty() }
+                        .take(8)
                     val rowCount = if(catToShow.size > 4) 2 else 1
                     for (i in 0 until rowCount) {
                         val itemsInRow = if(i == 0) catToShow.take(4) else catToShow.takeLast(4)
@@ -120,46 +125,32 @@ fun Feed(
             }
             Divider()
             // Placeholder for a real section in the future
-            SectionLabel(text = stringResource(id = R.string.feed_best_section))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-            ) {
-                MediumBoxProductCard(
-                    "Product Name Pro Max 256/16 GB",
-                    "9 999 ₴",
-                    "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
-                    "",
-                    onCardClicked = { navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0)) },
-                    onCartAddedClicked = {},
-                )
-                MediumBoxProductCard(
-                    "Product Name Pro Max 256/16 GB",
-                    "9 999 ₴",
-                    "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
-                    "",
-                    onCardClicked = { navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0)) },
-                    onCartAddedClicked = {},
-                )
-                MediumBoxProductCard(
-                    "Product Name Pro Max 256/16 GB",
-                    "9 999 ₴",
-                    "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
-                    "",
-                    onCardClicked = { navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0)) },
-                    onCartAddedClicked = {},
-                )
-                MediumBoxProductCard(
-                    "Product Name Pro Max 256/16 GB",
-                    "9 999 ₴",
-                    "https://ireland.apollo.olxcdn.com/v1/files/bcvijdh1nnv41-UA/image;s=1000x700",
-                    "",
-                    onCardClicked = { navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, 0)) },
-                    onCartAddedClicked = {},
-                )
+            val topProducts by feedViewModel.topProducts.collectAsStateWithLifecycle()
+            when(topProducts) {
+                is Result.Loading -> CircularProgressIndicator()
+                is Result.Success -> {
+                    SectionLabel(text = stringResource(id = R.string.feed_best_section))
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                    ) {
+                        val data = (topProducts as Result.Success<List<Product>>).data
+                        items(data) {
+                            MediumBoxProductCard(
+                                title = it.name,
+                                price = "${it.price.toPlainString()} ₴",
+                                imageSrc = it.titleImageSrc,
+                                contentDescription = it.name,
+                                onCardClicked = {
+                                    navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.ProductRoute, it.id))
+                                },
+                                onCartAddedClicked = {},)
+                        }
+                    }
+                }
+                else -> { }
             }
             Divider()
             SectionLabel(text = stringResource(id = R.string.feed_history_section))
@@ -212,36 +203,6 @@ fun Feed(
                 }
             }
             Divider()
-            when(categoryList) {
-                is Result.Loading -> CircularProgressIndicator()
-                is Result.Success -> {
-                    val catToShow = remember(categoryList) {
-                        (categoryList as Result.Success<List<CategoriesViewModel.CategoryNode>>).data
-                            .filter { categoryNode -> categoryNode.category.attributeGroups.isNotEmpty() }
-                            .take(8)
-                    }
-                    val rowCount = if(catToShow.size > 4) 2 else 1
-                    for (i in 0 until rowCount) {
-                        val itemsInRow = if(i == 0) catToShow.take(4) else catToShow.takeLast(4)
-                        LazyRow (
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                        ){
-                            items(itemsInRow) {
-                                SmallCategoryButton(it.category.name, it.categoryIcon, it.category.name) {
-                                    navController.navigate(
-                                        NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, it.category.id)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-                else -> { }
-            }
-
             SectionLabel(text = stringResource(id = R.string.computer_category))
             Column(
                 modifier = Modifier
