@@ -22,6 +22,9 @@ interface CartDao {
     @Insert(onConflict = REPLACE)
     fun addOrderedProductCrossRef(cartOrderedProductsCrossRef: CartOrderedProductsCrossRef)
 
+    @Query("SELECT * from cartorderedproductscrossref")
+    fun getOrderedProductsCrossRef(): List<CartOrderedProductsCrossRef>
+
     @Delete
     fun deleteOrderedProductCrossRef(cartOrderedProductsCrossRef: CartOrderedProductsCrossRef)
 

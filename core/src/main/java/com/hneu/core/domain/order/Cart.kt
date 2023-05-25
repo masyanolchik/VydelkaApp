@@ -13,7 +13,7 @@ class Cart(
         return if(productsInCart.contains(product)) {
             false
         } else {
-            orderedProducts.add(OrderedProduct(0, product, 1))
+            orderedProducts.add(OrderedProduct(orderedProducts.size, product, 1))
         }
     }
 

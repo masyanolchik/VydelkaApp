@@ -4,6 +4,7 @@ import com.hneu.core.datasource.promo.LocalPromoDataSource
 import com.hneu.core.datasource.promo.testing.FakeRemotePromoDataSource
 import com.hneu.core.repository.promo.CorePromoRepository
 import com.hneu.core.repository.promo.PromoRepository
+import com.hneu.core.usecase.promo.FetchPromosUseCase
 import com.hneu.vydelka.datasource.promo.RoomPromoDataSource
 import com.hneu.vydelka.localdatabase.LocalDatabase
 import com.hneu.vydelka.localdatabase.promo.PromoDao
@@ -22,6 +23,12 @@ interface PromoModule {
     fun provideLocalDataSource(roomDataSource: RoomPromoDataSource) : LocalPromoDataSource
 
     companion object {
+
+        @Provides
+        fun provideFetchPromosUseCase(promoRepository: PromoRepository): FetchPromosUseCase {
+            return FetchPromosUseCase(promoRepository)
+        }
+
         @Singleton
         @Provides
         fun providePromoDao(db: LocalDatabase): PromoDao {

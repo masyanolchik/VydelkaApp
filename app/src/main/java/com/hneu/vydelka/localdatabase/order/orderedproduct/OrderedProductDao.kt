@@ -3,6 +3,7 @@ package com.hneu.vydelka.localdatabase.order.orderedproduct
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import androidx.room.Transaction
@@ -12,10 +13,10 @@ import com.hneu.vydelka.localdatabase.order.LocalOrder
 
 @Dao
 interface OrderedProductDao {
-    @Insert(onConflict = REPLACE)
-    fun addOrderedProduct(localOrderedProduct: LocalOrderedProduct)
+    @Insert(onConflict = IGNORE)
+    fun addOrderedProduct(localOrderedProduct: LocalOrderedProduct) : Long
 
-    @Update(onConflict = REPLACE)
+    @Update(onConflict = IGNORE)
     fun updateOrderedProduct(localOrderedProduct: LocalOrderedProduct)
 
     @Delete
@@ -24,4 +25,8 @@ interface OrderedProductDao {
     @Transaction
     @Query("SELECT * from localorderedproduct WHERE orderedProductId=:orderedProductId")
     fun getOrderedProduct(orderedProductId: Int): OrderedProductWithAdditionalFields
+
+    @Transaction
+    @Query("SELECT * from localorderedproduct")
+    fun getOrderedProducts(): List<LocalOrderedProduct>
 }

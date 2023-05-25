@@ -16,6 +16,7 @@ import com.hneu.vydelka.localdatabase.product.attribute.fromDomain
 import com.hneu.vydelka.localdatabase.product.attributegroup.AttributeGroupAttributesCrossRef
 import com.hneu.vydelka.localdatabase.product.attributegroup.AttributeGroupDao
 import com.hneu.vydelka.localdatabase.product.attributegroup.fromDomain
+import com.hneu.vydelka.localdatabase.product.attributegroup.toDomain
 import com.hneu.vydelka.localdatabase.product.category.CategoryAttributeGroupsCrossRef
 import com.hneu.vydelka.localdatabase.product.category.CategoryDao
 import com.hneu.vydelka.localdatabase.product.category.LocalCategoryWithLocalAttributeGroups
@@ -59,7 +60,11 @@ class RoomProductDataSource @Inject constructor(
 
     override fun getProductById(productId: Int): Flow<Result<Product>> {
         return try {
-            flowOf(Result.Success(productDao.getProduct(productId).toDomain()))
+            val productLocal = productDao.getProduct(productId)
+            val attributeGroups = categoryDao.getAttributeGroupsForCategory(productLocal.localProduct.categoryId).map {
+                attributeGroupDao.getAttributeGroupWithAllowedValues(it.attributeGroupId).toDomain()
+            }
+            flowOf(Result.Success(productDao.getProduct(productId).toDomain(attributeGroups)))
         } catch (e: Exception) {
             flowOf(Result.Error(e))
         }
@@ -75,7 +80,12 @@ class RoomProductDataSource @Inject constructor(
 
     override fun getProductsByCategoryId(categoryId: Int): Flow<Result<List<Product>>> {
         return try {
-            flowOf(Result.Success(productDao.getProductByCategoryId(categoryId).map { it.toDomain() }))
+            val m = attributeDao.getAttributes()
+            val k = attributeGroupDao.getAttributes()
+            val attributeGroups = categoryDao.getAttributeGroupsForCategory(categoryId).map {
+                attributeGroupDao.getAttributeGroupWithAllowedValues(it.attributeGroupId).toDomain()
+            }
+            flowOf(Result.Success(productDao.getProductByCategoryId(categoryId).map { it.toDomain(attributeGroups = attributeGroups) }))
         } catch (e: Exception) {
             flowOf(Result.Error(e))
         }
@@ -100,7 +110,6 @@ class RoomProductDataSource @Inject constructor(
     private fun saveProductInternal(product: Product) {
         try {
             productDao.insertProduct(product.fromDomain())
-            saveCategory(product.category)
             product.images.forEach {
                 additionalImageDao.addAdditionalImage(it.fromDomainToLocalAdditionalImage()).toInt()
                 productDao.insertProductAdditionalImagesCrossRef(
@@ -109,18 +118,6 @@ class RoomProductDataSource @Inject constructor(
                         additionalImageDao.addAdditionalImage(it.fromDomainToLocalAdditionalImage()).toInt()
                     )
                 )
-            }
-            product.attributes.keys.forEach {attrGroup ->
-                attributeGroupDao.addAttributeGroup(attrGroup.fromDomain())
-                attrGroup.attributes.forEach { attr ->
-                    attributeDao.addAttribute(attr.fromDomain())
-                    attributeGroupDao.addAttributeGroupAttributesCrossRef(
-                        AttributeGroupAttributesCrossRef(
-                            attributeGroupId = attrGroup.id,
-                            attributeId = attr.id
-                        )
-                    )
-                }
             }
             product.attributes.values.forEach { attr ->
                 attributeDao.addAttribute(attr.fromDomain())
@@ -145,39 +142,7 @@ class RoomProductDataSource @Inject constructor(
         }
     }
 
-    private fun saveCategory(category: Category?) {
-        try {
-            if(category?.parentCategory != null) {
-                saveCategory(category.parentCategory)
-            }
-            if(category != null) {
-                val localCategory = category.fromDomain()
-                categoryDao.addCategory(localCategory)
-                category.attributeGroups.forEach { attrGroup ->
-                    val localGroup = attrGroup.fromDomain()
-                    attributeGroupDao.addAttributeGroup(localGroup)
-                    attrGroup.attributes.forEach { attr ->
-                        val localAttribute = attr.fromDomain()
-                        attributeDao.addAttribute(localAttribute)
-                        attributeGroupDao.addAttributeGroupAttributesCrossRef(
-                            AttributeGroupAttributesCrossRef(
-                                attributeGroupId = localGroup.attributeGroupId,
-                                attributeId = localAttribute.attributeId
-                            )
-                        )
-                    }
-                    categoryDao.addCategoryAttributeGroupsCrossRef(
-                        CategoryAttributeGroupsCrossRef(
-                            categoryId = localCategory.categoryId,
-                            attributeGroupId = attrGroup.id
-                        )
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            throw e
-        }
-    }
+
 
     private fun LocalCategoryWithLocalAttributeGroups.toDomainWithDao(categoryDao: CategoryDao): Category {
         return if(localCategory.parentCategoryId != null) {

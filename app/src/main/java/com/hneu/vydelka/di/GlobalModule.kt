@@ -3,8 +3,12 @@ package com.hneu.vydelka.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.hneu.vydelka.accountmanager.AccountManager
+import com.hneu.vydelka.accountmanager.AccountManagerImpl
 import com.hneu.vydelka.di.coroutinesscopes.DefaultDispatcher
+import com.hneu.vydelka.di.coroutinesscopes.IoDispatcher
 import com.hneu.vydelka.localdatabase.LocalDatabase
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,28 +27,32 @@ annotation class ApplicationScope
 
 @Module
 @InstallIn(SingletonComponent::class)
-class GlobalModule {
-    @Singleton
-    @Provides
-    fun provideAppDatabase(@ApplicationContext appContext: Context): LocalDatabase {
-        return Room
-            .databaseBuilder(appContext, LocalDatabase::class.java, LocalDatabase.DB_NAME)
-            .build()
-    }
+interface GlobalModule {
 
-    @Provides
-    fun provideSharedPref(@ApplicationContext appContext: Context) : SharedPreferences {
-        return appContext.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE)
-    }
-
-    @Singleton
-    @ApplicationScope
-    @Provides
-    fun provideCoroutineScope(@DefaultDispatcher defaultDispatcher: CoroutineDispatcher): CoroutineScope {
-        return CoroutineScope(SupervisorJob() + defaultDispatcher)
-    }
+   @Binds
+   fun bindAccountManager(accountManagerImpl: AccountManagerImpl): AccountManager
 
     companion object {
         private const val PREFERENCES_KEY = "VYDELKA_APP_PREF"
+
+        @Singleton
+        @Provides
+        fun provideAppDatabase(@ApplicationContext appContext: Context): LocalDatabase {
+            return Room
+                .databaseBuilder(appContext, LocalDatabase::class.java, LocalDatabase.DB_NAME)
+                .build()
+        }
+
+        @Provides
+        fun provideSharedPref(@ApplicationContext appContext: Context) : SharedPreferences {
+            return appContext.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE)
+        }
+
+        @Singleton
+        @ApplicationScope
+        @Provides
+        fun provideCoroutineScope(@DefaultDispatcher defaultDispatcher: CoroutineDispatcher): CoroutineScope {
+            return CoroutineScope(SupervisorJob() + defaultDispatcher)
+        }
     }
 }

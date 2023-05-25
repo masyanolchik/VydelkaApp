@@ -11,7 +11,7 @@ data class OrderedProductWithAdditionalFields(
     @Embedded val localOrderedProduct: LocalOrderedProduct,
     @Relation(
         entity = LocalProduct::class,
-        parentColumn = "orderedProductId",
+        parentColumn = "productId",
         entityColumn = "productId",
     )
     val localProduct: LocalProductWithAdditionalFields,

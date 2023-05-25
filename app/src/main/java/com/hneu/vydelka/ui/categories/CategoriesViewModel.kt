@@ -14,12 +14,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hneu.core.domain.product.Category
+import com.hneu.core.domain.product.Product
 import com.hneu.core.domain.request.Result
 import com.hneu.core.usecase.category.FetchCategoryUseCase
+import com.hneu.core.usecase.product.GetProductsByCategoryIdUseCase
+import com.hneu.vydelka.accountmanager.AccountManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
@@ -29,8 +34,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
-    val fetchCategoryUseCase: FetchCategoryUseCase,
+    private val fetchCategoryUseCase: FetchCategoryUseCase,
+    private val productsByCategoryIdUseCase: GetProductsByCategoryIdUseCase,
+    private val accountManager: AccountManager,
 ): ViewModel() {
+
+    val cart = accountManager.getCart()
 
     class CategoryNode(
         var category: Category,
@@ -62,6 +71,10 @@ class CategoriesViewModel @Inject constructor(
     private val _categoryList =
         MutableStateFlow<Result<List<CategoryNode>>>(Result.Loading())
     val categoryList = _categoryList
+
+    private val _productList =
+        MutableStateFlow<Result<List<Product>>>(Result.Loading())
+    val productStateFlow = _productList
 
     init {
         fetchCategoryList()
@@ -102,5 +115,33 @@ class CategoriesViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    fun fetchProductsByCategoryId(categoryId: Int): StateFlow<Result<List<Product>>> {
+        CoroutineScope(Dispatchers.IO).launch {
+            productsByCategoryIdUseCase
+                .invoke(categoryId)
+                .distinctUntilChanged()
+                .collectLatest {
+                    _productList.emit(it)
+                }
+        }
+        return productStateFlow
+    }
+
+    fun addProductToCart(product: Product) {
+        accountManager.addProductToCart(product)
+    }
+
+    fun addProductToFavorites(product: Product) {
+        accountManager.addProductToFavorites(product)
+    }
+
+    fun removeProductFromCart(product: Product) {
+        accountManager.removeProductFromCart(product)
+    }
+
+    fun removeProductFromFavorites(product: Product) {
+        accountManager.removeProductFromFavorites(product)
     }
 }

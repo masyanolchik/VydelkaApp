@@ -11,12 +11,10 @@ import com.hneu.vydelka.localdatabase.product.attributegroup.LocalAttributeGroup
     foreignKeys = [ForeignKey(
         parentColumns = ["categoryId"],
         childColumns = ["categoryId"],
-        onDelete = ForeignKey.CASCADE,
         entity = LocalCategory::class,
     ), ForeignKey(
         parentColumns = ["attributeGroupId"],
         childColumns = ["attributeGroupId"],
-        onDelete = ForeignKey.CASCADE,
         entity = LocalAttributeGroup::class
     )],
 )

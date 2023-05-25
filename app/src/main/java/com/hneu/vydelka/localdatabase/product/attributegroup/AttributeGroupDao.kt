@@ -24,6 +24,9 @@ interface AttributeGroupDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addAttributeGroupAttributesCrossRef(attributeGroupAttributesCrossRef: AttributeGroupAttributesCrossRef)
 
+    @Query("SELECT * from attributegroupattributescrossref")
+    fun getAttributes(): AttributeGroupAttributesCrossRef
+
     @Query("SELECT * from attributeGroups WHERE attributeGroupId=:attributeGroupId")
     fun getAttributeGroupById(attributeGroupId: Int): LocalAttributeGroup
 

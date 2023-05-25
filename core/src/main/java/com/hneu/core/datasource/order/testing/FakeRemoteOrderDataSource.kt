@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flowOf
 
 class FakeRemoteOrderDataSource : RemoteOrderDataSource {
     override fun saveOrder(order: Order, user: User?): Flow<Result<Order>> {
-        return flowOf(Result.Completed())
+        return flowOf(Result.Success(order))
     }
 
     override fun getOrders(user: User): Flow<Result<List<Order>>> {

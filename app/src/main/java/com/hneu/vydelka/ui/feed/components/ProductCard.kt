@@ -32,10 +32,12 @@ fun ProductCard(
     price: String,
     contentDescription: String,
     imageSrc: String,
-    onCardClicked: () -> Unit,
+    isProductAddedToCart: Boolean = false,
+    isProductFavorited: Boolean = false,
+    onFavoriteButtonClicked: () -> Unit = {},
+    onCartButtonClicked: () -> Unit = {},
+    onCardClicked: () -> Unit = {},
 ) {
-    var isProductAddedToCart by rememberSaveable { mutableStateOf(false) }
-    var isProductFavorited by rememberSaveable { mutableStateOf(false) }
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier
@@ -130,7 +132,7 @@ fun ProductCard(
                             Icons.Outlined.FavoriteBorder
                         }
                         FilledIconButton(
-                            onClick = { isProductFavorited = !isProductFavorited },
+                            onClick = onFavoriteButtonClicked,
                         ) {
                             Icon(
                                 imageVector = favoritesIcon,
@@ -138,7 +140,7 @@ fun ProductCard(
                             )
                         }
                         FilledIconButton(
-                            onClick = { isProductAddedToCart = !isProductAddedToCart },
+                            onClick = onCartButtonClicked,
                         ) {
                             Icon(
                                 imageVector = cartIcon,
@@ -155,12 +157,18 @@ fun ProductCard(
 
 @Composable
 fun CartProductCard(
-    title: String,
-    price: String,
-    contentDescription: String,
-    imageSrc: String,
+    title: String = "",
+    price: String = "",
+    contentDescription: String = "",
+    imageSrc: String = "",
+    quantity: Int = 0,
+    isProductAddedToFavorite: Boolean = false,
+    onQuantityChanges: (String) -> Unit = {},
+    onDecreaseQuantityClick: () -> Unit = {},
+    onIncreaseQuantityClick: () -> Unit = {},
+    onFavoriteButtonClicked: () -> Unit = {},
+    onDeleteProduct: () -> Unit = {},
 ) {
-    var isProductFavorited by rememberSaveable { mutableStateOf(false) }
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier
@@ -200,7 +208,7 @@ fun CartProductCard(
                             .fillMaxWidth()
                             .weight(0.3f)
                     ) {
-                        val favoritesIcon = if(isProductFavorited) {
+                        val favoritesIcon = if(isProductAddedToFavorite) {
                             Icons.Outlined.Favorite
                         } else {
                             Icons.Outlined.FavoriteBorder
@@ -213,17 +221,19 @@ fun CartProductCard(
                                 .fillMaxHeight()
                                 .weight(0.7f),
                         )
-                        IconButton(
-                            onClick = { isProductFavorited = !isProductFavorited },
+                        /*IconButton(
+                            onClick = { onFavoriteButtonClicked() },
                             modifier = Modifier.weight(0.15f),
                         ) {
                             Icon(
                                 imageVector = favoritesIcon,
                                 contentDescription = stringResource(id = R.string.add_to_favorites_button_label)
                             )
-                        }
+                        }*/
                         IconButton(
-                            onClick = { },
+                            onClick = {
+                                onDeleteProduct()
+                            },
                             modifier = Modifier.weight(0.15f),
                         ) {
                             Icon(
@@ -253,7 +263,9 @@ fun CartProductCard(
                         horizontalArrangement = Arrangement.End,
                     ) {
                         IconButton(
-                            onClick = {  },
+                            onClick = {
+                                onDecreaseQuantityClick()
+                            },
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Remove,
@@ -262,13 +274,13 @@ fun CartProductCard(
                         }
                         TextField(
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            value = "28",
-                            onValueChange = {},
+                            value = quantity.toString(),
+                            onValueChange = onQuantityChanges,
                             singleLine = true,
                             modifier = Modifier.width(52.dp),
                         )
                         IconButton(
-                            onClick = {  },
+                            onClick = { onIncreaseQuantityClick() },
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Add,

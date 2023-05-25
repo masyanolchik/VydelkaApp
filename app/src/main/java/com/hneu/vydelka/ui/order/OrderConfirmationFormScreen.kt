@@ -13,7 +13,18 @@ import com.hneu.vydelka.ui.order.components.FullScreenDialogWithElevatedTopAppBa
 import com.hneu.vydelka.ui.order.components.UserOrderConfirmationInfoForm
 
 @Composable
-fun OrderConfirmationForm(onClose: () -> Unit, onProceed: () -> Unit) {
+fun OrderConfirmationForm(
+    onClose: () -> Unit = {},
+    onProceed: () -> Unit = {},
+    nameText: String = "",
+    onNameTextFieldValueChanged: (String) -> Unit = { },
+    lastNameText: String = "",
+    onLastNameTextFieldValueChanged: (String) -> Unit = { },
+    phoneText: String = "",
+    onPhoneTextFieldValueChanged: (String) -> Unit = { },
+    addressText: String = "",
+    onAddressTextFieldValueChanged: (String) -> Unit = { },
+ ) {
     val topAppBarTitle: @Composable () -> Unit = {
         Text(stringResource(id = R.string.bottom_sheet_proceed_order))
     }
@@ -33,11 +44,6 @@ fun OrderConfirmationForm(onClose: () -> Unit, onProceed: () -> Unit) {
         }
     }
 
-    var nameText by rememberSaveable { mutableStateOf("") }
-    var lastNameText by rememberSaveable { mutableStateOf("") }
-    var phoneText by rememberSaveable { mutableStateOf("") }
-    var addressText by rememberSaveable { mutableStateOf("") }
-
     FullScreenDialogWithElevatedTopAppBar(
         topAppBarTitle = topAppBarTitle,
         topAppBarNavigationIcon = topAppBarNavigationIcon,
@@ -49,10 +55,10 @@ fun OrderConfirmationForm(onClose: () -> Unit, onProceed: () -> Unit) {
             lastNameTextFieldValue = lastNameText,
             phoneTextFieldValue = phoneText,
             addressTextFieldValue = addressText,
-            onNameTextFieldValueChanged = { changedText -> nameText = changedText},
-            onLastNameTextFieldValueChanged = { changedText -> lastNameText = changedText},
-            onPhoneTextFieldValueChanged = { changedText -> phoneText = changedText },
-            onAddressTextFieldValueChanged = { changedText -> addressText = changedText },
+            onNameTextFieldValueChanged = onNameTextFieldValueChanged,
+            onLastNameTextFieldValueChanged = onLastNameTextFieldValueChanged,
+            onPhoneTextFieldValueChanged = onPhoneTextFieldValueChanged,
+            onAddressTextFieldValueChanged = onAddressTextFieldValueChanged,
         )
     }
 }

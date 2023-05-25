@@ -27,7 +27,11 @@ import com.hneu.vydelka.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopBar(showLogo: Boolean = true, showSearch: Boolean = false, onCartButtonClick: () -> Unit,) {
+fun MainTopBar(
+    showLogo: Boolean = true,
+    showSearch: Boolean = false,
+    badgeNumber: Int = 0,
+    onCartButtonClick: () -> Unit,) {
     var text by rememberSaveable { mutableStateOf("") }
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
@@ -75,17 +79,19 @@ fun MainTopBar(showLogo: Boolean = true, showSearch: Boolean = false, onCartButt
                             end.linkTo(parent.end)
                         }
                     ) {
-                        Badge(
-                            modifier = Modifier.align(Alignment.TopEnd)
-                        ) {
-                            val badgeNumber = "3"
-                            Text(
-                                badgeNumber,
-                                modifier = Modifier.semantics {
-                                    contentDescription = "$badgeNumber new notifications"
-                                }
-                            )
+                        if(badgeNumber > 0) {
+                            Badge(
+                                modifier = Modifier.align(Alignment.TopEnd)
+                            ) {
+                                Text(
+                                    badgeNumber.toString(),
+                                    modifier = Modifier.semantics {
+                                        contentDescription = "$badgeNumber new notifications"
+                                    }
+                                )
+                            }
                         }
+
                         IconButton(onClick = onCartButtonClick) {
                             Icon(
                                 imageVector = Icons.Filled.ShoppingCart,
@@ -96,16 +102,17 @@ fun MainTopBar(showLogo: Boolean = true, showSearch: Boolean = false, onCartButt
                 }
             } else {
                 Box {
-                    Badge(
-                        modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
-                        val badgeNumber = "3"
-                        Text(
-                            badgeNumber,
-                            modifier = Modifier.semantics {
-                                contentDescription = "$badgeNumber new notifications"
-                            }
-                        )
+                    if(badgeNumber > 0) {
+                        Badge(
+                            modifier = Modifier.align(Alignment.TopEnd)
+                        ) {
+                            Text(
+                                badgeNumber.toString(),
+                                modifier = Modifier.semantics {
+                                    contentDescription = "$badgeNumber new notifications"
+                                }
+                            )
+                        }
                     }
                     IconButton(onClick = onCartButtonClick) {
                         Icon(
@@ -124,6 +131,7 @@ fun MainTopBar(showLogo: Boolean = true, showSearch: Boolean = false, onCartButt
 fun CategoryTopAppBar(
     title: String = "",
     onClose: () -> Unit = {},
+    badgeNumber: Int = 0,
     onSortButtonClick: () -> Unit = {},
     onFilterButtonClick: () -> Unit = {},
     onCartButtonClick: () -> Unit = {},
@@ -157,16 +165,17 @@ fun CategoryTopAppBar(
                 )
             }
             Box {
-                Badge(
-                    modifier = Modifier.align(Alignment.TopEnd)
-                ) {
-                    val badgeNumber = "3"
-                    Text(
-                        badgeNumber,
-                        modifier = Modifier.semantics {
-                            contentDescription = "$badgeNumber new notifications"
-                        }
-                    )
+                if(badgeNumber > 0) {
+                    Badge(
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        Text(
+                            badgeNumber.toString(),
+                            modifier = Modifier.semantics {
+                                contentDescription = "$badgeNumber new notifications"
+                            }
+                        )
+                    }
                 }
                 IconButton(onClick = onCartButtonClick) {
                     Icon(

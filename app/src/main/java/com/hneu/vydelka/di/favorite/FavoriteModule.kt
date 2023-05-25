@@ -5,6 +5,7 @@ import com.hneu.core.repository.favorite.CoreFavoriteRepository
 import com.hneu.core.repository.favorite.FavoriteRepository
 import com.hneu.core.usecase.favorite.AddToFavoritesUseCase
 import com.hneu.core.usecase.favorite.FetchFavoriteProductsUseCase
+import com.hneu.core.usecase.favorite.RemoveFromFavoritesUseCase
 import com.hneu.vydelka.datasource.favorite.RoomFavoriteDataSource
 import com.hneu.vydelka.localdatabase.LocalDatabase
 import dagger.Binds
@@ -22,6 +23,11 @@ interface FavoriteModule {
     fun bindLocalDataSource(roomFavoriteDataSource: RoomFavoriteDataSource): LocalFavoriteDataSource
 
     companion object {
+
+        @Provides
+        fun provideRemoveFromFavoritesUseCase(favoriteRepository: FavoriteRepository): RemoveFromFavoritesUseCase {
+            return RemoveFromFavoritesUseCase(favoriteRepository)
+        }
 
         @Provides
         fun provideAddToFavoritesUseCase(favoriteRepository: FavoriteRepository): AddToFavoritesUseCase {

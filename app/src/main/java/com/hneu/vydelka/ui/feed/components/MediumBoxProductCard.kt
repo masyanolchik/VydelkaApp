@@ -28,8 +28,8 @@ fun MediumBoxProductCard(
     contentDescription: String,
     onCardClicked: () -> Unit,
     onCartAddedClicked: () -> Unit,
+    isProductAddedToCart: Boolean = false,
 ) {
-    var isProductAddedToCart by rememberSaveable { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .width(120.dp),
@@ -74,7 +74,6 @@ fun MediumBoxProductCard(
                         contentColor = MaterialTheme.colorScheme.onTertiaryContainer
                     ),
                     onClick = {
-                        isProductAddedToCart = !isProductAddedToCart
                         onCartAddedClicked.invoke()
                     },
                     modifier = Modifier
@@ -91,7 +90,6 @@ fun MediumBoxProductCard(
             } else {
                 ElevatedButton(
                     onClick = {
-                        isProductAddedToCart = !isProductAddedToCart
                         onCartAddedClicked.invoke()
                     }, modifier = Modifier
                         .padding(bottom = 8.dp)

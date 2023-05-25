@@ -16,8 +16,17 @@ class RoomOrderDataSource @Inject constructor(
 ) : LocalOrderDataSource {
     override fun saveOrder(order: Order, user: User?): Flow<Result<Order>> {
         return try {
-            orderDao.insertOrder(order.fromDomain())
-            flowOf(Result.Success(order))
+            val id = orderDao.insertOrder(order.fromDomain())
+            flowOf(Result.Success(Order(
+                id = id.toInt(),
+                dateOfOrder = order.dateOfOrder,
+                cart = order.cart,
+                orderStatus = order.orderStatus,
+                nonRegisteredCustomerAddress = order.nonRegisteredCustomerAddress,
+                nonRegisteredCustomerPhone = order.nonRegisteredCustomerPhone,
+                nonRegisteredCustomerLastname = order.nonRegisteredCustomerLastname,
+                nonRegisteredCustomerName = order.nonRegisteredCustomerName,
+            )))
         } catch (e: Exception) {
             flowOf(Result.Error(e))
         }

@@ -9,29 +9,35 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.hneu.core.domain.order.Cart
+import com.hneu.core.domain.product.Product
 import com.hneu.vydelka.ui.categories.Categories
 import com.hneu.vydelka.ui.categories.category.CategoryScreen
 import com.hneu.vydelka.ui.favorites.Favorites
 import com.hneu.vydelka.ui.feed.Feed
 import com.hneu.vydelka.ui.product.ProductScreen
 import com.hneu.vydelka.ui.profile.Profile
+import com.hneu.core.domain.request.Result
+
 
 @Composable
 fun NavigationWrapper(
     navController: NavHostController,
+    cartState: Cart,
+    favoritesState: Result<List<Product>>,
     scrollState: ScrollState,
     paddingValues: PaddingValues,
     onNavigate: (String) -> Unit,
 ) {
     NavHost(navController = navController, startDestination = BottomMenuItem.FeedScreen.route, modifier = Modifier.padding(paddingValues)) {
-        navigateTo(navController, onNavigate)
+        navigateTo(cartState, favoritesState, navController, onNavigate)
     }
 }
 
-fun NavGraphBuilder.navigateTo(navController: NavHostController, onNavigate: (String) -> Unit) {
+fun NavGraphBuilder.navigateTo(cartState: Cart, favoritesState: Result<List<Product>>, navController: NavHostController, onNavigate: (String) -> Unit) {
     composable(BottomMenuItem.FeedScreen.route) {
         onNavigate(BottomMenuItem.FeedScreen.route)
-        Feed(navController)
+        Feed(cartState, navController,favoritesState)
     }
     composable(BottomMenuItem.CatalogueScreen.route) {
         onNavigate(BottomMenuItem.CatalogueScreen.route)
@@ -39,20 +45,20 @@ fun NavGraphBuilder.navigateTo(navController: NavHostController, onNavigate: (St
     }
     composable(BottomMenuItem.FavoritesScreen.route) {
         onNavigate(BottomMenuItem.FavoritesScreen.route)
-        Favorites(navController)
+        Favorites(cartState, navController)
     }
     composable(BottomMenuItem.ProfileScreen.route) {
         onNavigate(BottomMenuItem.ProfileScreen.route)
         Profile(navController)
     }
     composable("${NavigationRoutes.CategoryRoute.route}{${NavigationRoutes.CategoryRoute.idRoute}}") { backStackEntry ->
-        val id = backStackEntry.arguments?.getInt(NavigationRoutes.CategoryRoute.idRoute) ?: -1
+        val id = backStackEntry.arguments?.getString(NavigationRoutes.CategoryRoute.idRoute)?.toInt() ?: -1
         onNavigate(NavigationRoutes.CategoryRoute.route)
         CategoryScreen(navController = navController, id = id)
     }
     composable("${NavigationRoutes.ProductRoute.route}{${NavigationRoutes.ProductRoute.idRoute}}") { backStackEntry ->
-        val id = backStackEntry.arguments?.getInt(NavigationRoutes.ProductRoute.idRoute) ?: -1
+        val id = backStackEntry.arguments?.getString(NavigationRoutes.ProductRoute.idRoute)?.toInt() ?: -1
         onNavigate(NavigationRoutes.ProductRoute.route)
-        ProductScreen(navController = navController, id = id)
+        ProductScreen(navController = navController, id = id, favoritesState = favoritesState)
     }
 }

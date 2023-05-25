@@ -61,6 +61,7 @@ class RoomCategoryDataSource @Inject constructor(
                     attrGroup.attributes.forEach { attr ->
                         val localAttribute = attr.fromDomain()
                         attributeDao.addAttribute(localAttribute)
+                        attributeDao.getAttributeById(localAttribute.attributeId)
                         attributeGroupDao.addAttributeGroupAttributesCrossRef(
                             AttributeGroupAttributesCrossRef(
                                 attributeGroupId = localGroup.attributeGroupId,
@@ -75,6 +76,8 @@ class RoomCategoryDataSource @Inject constructor(
                         )
                     )
             }
+            val k = attributeDao.getAttributes()
+            val m = 0
           }
         } catch (e: Exception) {
             throw e

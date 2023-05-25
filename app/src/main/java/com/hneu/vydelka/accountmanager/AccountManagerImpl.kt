@@ -14,14 +14,20 @@ import com.hneu.core.usecase.cart.FetchCartUseCase
 import com.hneu.core.usecase.cart.SaveCartUseCase
 import com.hneu.core.usecase.favorite.AddToFavoritesUseCase
 import com.hneu.core.usecase.favorite.FetchFavoriteProductsUseCase
+import com.hneu.core.usecase.favorite.RemoveFromFavoritesUseCase
 import com.hneu.core.usecase.order.FetchOrdersUseCase
 import com.hneu.core.usecase.order.SaveOrderUseCase
 import com.hneu.vydelka.di.ApplicationScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
@@ -34,17 +40,21 @@ class AccountManagerImpl @Inject constructor(
     private val userRepository: UserRepository,
     private val fetchFavoriteProductsUseCase: FetchFavoriteProductsUseCase,
     private val addToFavoritesUseCase: AddToFavoritesUseCase,
+    private val removeFromFavoritesUseCase: RemoveFromFavoritesUseCase,
     private val fetchCartUseCase: FetchCartUseCase,
     private val saveCartUseCase: SaveCartUseCase,
     private val fetchOrdersUseCase: FetchOrdersUseCase,
     private val saveOrderUseCase: SaveOrderUseCase,
 ) : AccountManager {
-    private lateinit var _currentUser: User
-    private lateinit var _cart: Cart
+    private  var _currentUser: User = UNREGISTERED_USER
+    private var _cart: Cart = CART_UNREGISTERED_USER
+    private var cartStateFlow: MutableStateFlow<Cart> = MutableStateFlow(CART_UNREGISTERED_USER)
+    private var favoritesFlow: MutableStateFlow<Result<List<Product>>> = MutableStateFlow(Result.Loading())
+    private val isUserLoggedIn = MutableStateFlow(sharedPreferences.getBoolean(SHARED_PREF_KEY, false))
 
     init {
         coroutineScope.launch {
-            val isLogged = sharedPreferences.getBoolean(SHARED_PREF_KEY, false)
+            val isLogged = isUserLoggedIn.value
             if(!isLogged) {
                 val userResult = userRepository
                     .getByUsernameAndPassword(UNREGISTERED_USER.username, UNREGISTERED_USER.password)
@@ -72,9 +82,11 @@ class AccountManagerImpl @Inject constructor(
                 when(cartResult) {
                     is Result.Success -> {
                         _cart = cartResult.data
+                        cartStateFlow.emit(_cart)
                     }
                     else -> {
                         _cart = CART_UNREGISTERED_USER
+                        cartStateFlow.emit(_cart)
                         saveCartUseCase
                             .invoke(_cart)
                             .flowOn(Dispatchers.IO)
@@ -82,38 +94,129 @@ class AccountManagerImpl @Inject constructor(
                     }
                 }
             }
-
         }
 
     }
 
+    override fun isUserLoggedIn(): Flow<Boolean> {
+        return isUserLoggedIn
+    }
+
     override fun getCurrentUser() = _currentUser
 
-    override fun addProductToFavorites(product: Product): Flow<Result<Product>> {
-        return addToFavoritesUseCase.invoke(_currentUser.id, product)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun addProductToFavorites(product: Product): StateFlow<Result<List<Product>>> {
+        coroutineScope.launch {
+            addToFavoritesUseCase
+                .invoke(_currentUser.id, product)
+                .flowOn(Dispatchers.IO)
+                .flatMapLatest {
+                    fetchFavoriteProductsUseCase.invoke(_currentUser.id)
+                }
+                .collectLatest {
+                    favoritesFlow.emit(it)
+                }
+        }
+        return favoritesFlow
     }
 
-    override fun getCart(): Flow<Result<Cart>> {
-        return flowOf(Result.Success(_cart))
+    override fun removeProductFromFavorites(product: Product): StateFlow<Result<List<Product>>> {
+        coroutineScope.launch {
+            removeFromFavoritesUseCase
+                .invoke(_currentUser.id, product)
+                .flowOn(Dispatchers.IO)
+                .flatMapLatest {
+                    fetchFavoriteProductsUseCase.invoke(_currentUser.id)
+                }
+                .collectLatest {
+                    favoritesFlow.emit(it)
+                }
+        }
+        return favoritesFlow
     }
 
-    override fun getFavorites(): Flow<Result<List<Product>>> {
-        return fetchFavoriteProductsUseCase.invoke(_currentUser.id)
+    override fun getCart(): StateFlow<Cart> {
+        coroutineScope.launch {
+            fetchCartUseCase
+                .invoke(_currentUser.id)
+                .flowOn(Dispatchers.IO)
+                .collectLatest {
+                    when(it) {
+                        is Result.Success -> {
+                            cartStateFlow.emit(_cart)
+                        }
+                        else -> {}
+                    }
+                }
+        }
+        return cartStateFlow
     }
 
-    override fun addProductToCart(product: Product): Flow<Result<Cart>> {
+    override fun getFavorites(): StateFlow<Result<List<Product>>> {
+        coroutineScope.launch {
+            fetchFavoriteProductsUseCase
+                .invoke(_currentUser.id)
+                .flowOn(Dispatchers.IO)
+                .collectLatest {
+                    favoritesFlow.emit(it)
+                }
+        }
+        return favoritesFlow
+    }
+
+    override fun addProductToCart(product: Product): StateFlow<Cart> {
         _cart.addProductToCart(product)
-        return saveCartUseCase.invoke(_cart)
+        coroutineScope.launch {
+            saveCartUseCase.invoke(_cart)
+                .flowOn(Dispatchers.IO)
+                .collectLatest {
+                    when(it) {
+                        is Result.Success -> {
+                            cartStateFlow.emit(it.data)
+                        }
+                        is Result.Error -> {
+                        }
+                        else -> {
+                        }
+                    }
+                }
+        }
+        return cartStateFlow
     }
 
-    override fun changeProductQuantityInCart(product: Product, desiredQuantity: Int): Flow<Result<Cart>> {
+    override fun changeProductQuantityInCart(product: Product, desiredQuantity: Int): StateFlow<Cart> {
         _cart.changeProductQuantityInCart(product, desiredQuantity)
-        return saveCartUseCase.invoke(_cart)
+        coroutineScope.launch {
+            saveCartUseCase
+                .invoke(_cart)
+                .flowOn(Dispatchers.IO)
+                .collectLatest {
+                    when(it) {
+                        is Result.Success -> {
+                            cartStateFlow.emit(it.data)
+                        }
+                        else -> {}
+                    }
+                }
+        }
+        return cartStateFlow
     }
 
-    override fun removeProductFromCart(product: Product): Flow<Result<Cart>> {
+    override fun removeProductFromCart(product: Product): StateFlow<Cart> {
         _cart.deleteProductFromCart(product)
-        return saveCartUseCase.invoke(_cart)
+        coroutineScope.launch {
+            saveCartUseCase.invoke(_cart)
+                .flowOn(Dispatchers.IO)
+                .collectLatest {
+                    when(it) {
+                        is Result.Success -> {
+                            cartStateFlow.emit(it.data)
+                        }
+                        else -> {}
+                    }
+                }
+        }
+        return cartStateFlow
     }
 
     override fun getOrders(): Flow<Result<List<Order>>> {

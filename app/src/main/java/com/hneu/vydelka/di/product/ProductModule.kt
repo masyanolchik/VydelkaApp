@@ -5,6 +5,7 @@ import com.hneu.core.datasource.product.testing.FakeRemoteProductDataSource
 import com.hneu.core.repository.product.CoreProductRepository
 import com.hneu.core.repository.product.ProductRepository
 import com.hneu.core.usecase.product.FetchProductsUseCase
+import com.hneu.core.usecase.product.GetProductByIdUseCase
 import com.hneu.core.usecase.product.GetProductsByCategoryIdUseCase
 import com.hneu.core.usecase.product.GetProductsByTagsUseCase
 import com.hneu.core.usecase.product.GetTopProductsUseCase
@@ -28,6 +29,11 @@ interface ProductModule {
     fun bindLocalDataSource(roomProductDataSource: RoomProductDataSource): LocalProductDataSource
 
     companion object {
+        @Provides
+        fun provideGetProductByIdUseCase(productRepository: ProductRepository): GetProductByIdUseCase {
+            return GetProductByIdUseCase(productRepository)
+        }
+
         @Provides
         fun provideFetchProductsUseCase(productRepository: ProductRepository): FetchProductsUseCase {
             return FetchProductsUseCase(productRepository)

@@ -11,6 +11,7 @@
     <string name="bottom_sheet_remove_product_from_cart">Видалити товар з кошика</string>
     <string name="bottom_sheet_reduce_product_content_description">Зменшити кількість товару</string>
     <string name="bottom_sheet_add_product_content_description">Збільшити кількість товару</string>
+    <string name="bottom_sheet_empty">Додайте товари до кошика</string>
     <string name="bottom_sheet_proceed_order">Оформити замовлення</string>
 
     <string name="order_form_name_label">Ім\'я</string>

@@ -21,7 +21,7 @@ data class LocalUserWithAdditionalFields(
         entity = LocalProduct::class,
         parentColumn = "userId",
         entityColumn = "productId",
-        associateBy = Junction(UserProductHistoryCrossRef::class)
+        associateBy = Junction(UserProductFavoriteCrossRef::class)
     )
     val userProductFavorites: List<LocalProductWithAdditionalFields>,
     @Relation(

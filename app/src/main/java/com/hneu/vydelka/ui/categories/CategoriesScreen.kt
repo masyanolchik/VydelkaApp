@@ -80,7 +80,7 @@ fun SubCategorySelectionStrip(
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(childrenNodes) {
-            val onCategoryClick: (Int) -> Unit = { navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, 0)) }
+            val onCategoryClick: (Int) -> Unit = { navController.navigate(NavigationRoutes.getNavigationRoute(NavigationRoutes.CategoryRoute, it)) }
             SubCategoryCard(
                 mainCategory = it.category,
                 subcategories = it.directChildren.map { it.category },

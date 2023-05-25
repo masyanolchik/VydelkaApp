@@ -58,15 +58,14 @@ fun LocalProduct.toDomain(
         additionalTags = additionalTags
     )
 
-fun LocalProductWithAdditionalFields.toDomain(parentCategory: Category? = null) : Product {
+fun LocalProductWithAdditionalFields.toDomain(attributeGroups: List<AttributeGroup> = emptyList(), parentCategory: Category? = null) : Product {
     val category = localCategory.toDomain(parentCategory)
     val attrList = attributeList.map { it.toDomain() }
     val attrMap = mutableMapOf<AttributeGroup, Attribute>()
     attrList.forEach() { attr ->
-        val group = category.attributeGroups.find {group -> group.attributes.contains(attr)}
+        val group = attributeGroups.find {group -> group.attributes.map { it.id }.contains(attr.id)}
         if(group != null) attrMap[group] = attr
     }
-    category.attributeGroups
     return Product(
         id = localProduct.productId,
         name = localProduct.name,

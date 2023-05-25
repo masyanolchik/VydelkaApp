@@ -10,15 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hneu.vydelka.R
 
-class PromoImageAdapter(val useWideItems:Boolean = false,val onPromoClick:(PromoData) -> Unit) :
-    ListAdapter<PromoImageAdapter.PromoData, PromoImageAdapter.PromoImageViewHolder>(PromoData.diffUtil) {
-    data class PromoData(val promoTitle: String, val imageSrc: String, val promoId: Int) {
+class CarouselImageAdapter(val useWideItems:Boolean = false, val onPromoClick:(CarouselData) -> Unit) :
+    ListAdapter<CarouselImageAdapter.CarouselData, CarouselImageAdapter.PromoImageViewHolder>(CarouselData.diffUtil) {
+    data class CarouselData(val promoTitle: String, val imageSrc: String, val promoId: Int) {
         companion object {
-            val diffUtil = object : DiffUtil.ItemCallback<PromoData>() {
-                override fun areItemsTheSame(oldItem: PromoData, newItem: PromoData) =
+            val diffUtil = object : DiffUtil.ItemCallback<CarouselData>() {
+                override fun areItemsTheSame(oldItem: CarouselData, newItem: CarouselData) =
                     oldItem === newItem
 
-                override fun areContentsTheSame(oldItem: PromoData, newItem: PromoData) =
+                override fun areContentsTheSame(oldItem: CarouselData, newItem: CarouselData) =
                     oldItem == newItem
             }
         }
@@ -26,7 +26,7 @@ class PromoImageAdapter(val useWideItems:Boolean = false,val onPromoClick:(Promo
 
     inner class PromoImageViewHolder(private val maskableFrameLayout: View) :
         RecyclerView.ViewHolder(maskableFrameLayout) {
-        fun bind(promoData: PromoData) {
+        fun bind(promoData: CarouselData) {
             maskableFrameLayout.setOnClickListener { onPromoClick.invoke(promoData) }
             val imageView = maskableFrameLayout.findViewById<ImageView>(R.id.carousel_image_view)
             Glide.with(itemView.context).load(promoData.imageSrc).into(imageView)

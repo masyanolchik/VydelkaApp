@@ -11,7 +11,7 @@ import androidx.room.Update
 @Dao
 interface OrderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrder(localOrder: LocalOrder)
+    fun insertOrder(localOrder: LocalOrder): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateOrder(localOrder: LocalOrder)

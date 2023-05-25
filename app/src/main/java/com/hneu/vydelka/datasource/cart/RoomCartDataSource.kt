@@ -9,6 +9,7 @@ import com.hneu.vydelka.localdatabase.order.cart.fromDomain
 import com.hneu.vydelka.localdatabase.order.cart.toDomain
 import com.hneu.vydelka.localdatabase.order.orderedproduct.OrderedProductDao
 import com.hneu.vydelka.localdatabase.order.orderedproduct.fromDomain
+import com.hneu.vydelka.localdatabase.product.ProductDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject

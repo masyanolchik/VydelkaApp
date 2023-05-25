@@ -16,9 +16,9 @@ interface AttributeDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateAttribute(localAttribute: LocalAttribute)
 
-    @Delete
-    fun deleteAttribute(localAttribute: LocalAttribute)
-
     @Query("SELECT * from attributes WHERE attributeId=:attributeId")
     fun getAttributeById(attributeId: Int): LocalAttribute
+
+    @Query("SELECT * from attributes")
+    fun getAttributes(): List<LocalAttribute>
 }
