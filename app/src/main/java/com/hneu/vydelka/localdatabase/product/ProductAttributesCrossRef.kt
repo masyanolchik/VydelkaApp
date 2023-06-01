@@ -12,12 +12,10 @@ import com.hneu.vydelka.localdatabase.product.tag.LocalTag
     foreignKeys = [ForeignKey(
         parentColumns = ["productId"],
         childColumns = ["productId"],
-        onDelete = ForeignKey.CASCADE,
         entity = LocalProduct::class,
     ), ForeignKey(
         parentColumns = ["attributeId"],
         childColumns = ["attributeId"],
-        onDelete = ForeignKey.CASCADE,
         entity = LocalAttribute::class
     )],
 )

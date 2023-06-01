@@ -12,13 +12,11 @@ import com.hneu.vydelka.localdatabase.product.LocalProduct
         ForeignKey(
             parentColumns = ["userId"],
             childColumns = ["userId"],
-            onDelete = ForeignKey.CASCADE,
             entity = LocalUser::class,
         ),
         ForeignKey(
             parentColumns = ["productId"],
             childColumns = ["productId"],
-            onDelete = ForeignKey.CASCADE,
             entity = LocalProduct::class,
         ),
     ]

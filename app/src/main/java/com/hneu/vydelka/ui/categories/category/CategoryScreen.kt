@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -23,15 +24,18 @@ import com.hneu.vydelka.ui.navigation.CategoryTopAppBar
 import com.hneu.vydelka.ui.navigation.NavigationRoutes
 import com.hneu.core.domain.request.Result
 import com.hneu.vydelka.accountmanager.AccountManagerImpl
+import com.hneu.vydelka.ui.favorites.FavoritesViewModel
 
 @Composable
 fun CategoryScreen(
     navController: NavController = rememberNavController(),
     id: Int = 0,
     categoriesViewModel: CategoriesViewModel = hiltViewModel(),
+    favoritesViewModel: FavoritesViewModel = hiltViewModel(),
 ) {
     val products by categoriesViewModel.fetchProductsByCategoryId(id).collectAsStateWithLifecycle()
     val categoryResult by categoriesViewModel.categoryList.collectAsStateWithLifecycle()
+    val favoriteProducts by favoritesViewModel.favoritesProducts.collectAsStateWithLifecycle()
     var categoryTitle by remember { mutableStateOf("") }
     when(categoryResult) {
         is Result.Success -> {
@@ -64,11 +68,41 @@ fun CategoryScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(productList) {
+                            var isProductAddedToCart by rememberSaveable {
+                                mutableStateOf(
+                                    cart.orderedProducts.map {op ->
+                                        op.product.id
+                                    }.contains(it.id)
+                                )
+                            }
+                            var isProductFavorited by rememberSaveable { mutableStateOf(when(favoriteProducts) {
+                                is Result.Success ->  (favoriteProducts as Result.Success<List<Product>>).data.map { it.id }.contains(it.id)
+                                else -> false
+                            })
+                            }
                             ProductCard(
                                 title = it.name,
                                 price = it.price.toPlainString(),
                                 contentDescription = "",
                                 imageSrc = it.titleImageSrc,
+                                onFavoriteButtonClicked = {
+                                    isProductFavorited = !isProductFavorited
+                                    if(isProductFavorited) {
+                                        categoriesViewModel.addProductToFavorites(it)
+                                    } else {
+                                        categoriesViewModel.removeProductFromFavorites(it)
+                                    }
+                                },
+                                onCartButtonClicked = {
+                                    isProductAddedToCart = !isProductAddedToCart
+                                    if(isProductAddedToCart) {
+                                        categoriesViewModel.addProductToCart(it)
+                                    } else {
+                                        categoriesViewModel.removeProductFromCart(it)
+                                    }
+                                },
+                                isProductAddedToCart = isProductAddedToCart,
+                                isProductFavorited = isProductFavorited,
                             ) {
                                 navController.navigate(
                                     NavigationRoutes.getNavigationRoute(

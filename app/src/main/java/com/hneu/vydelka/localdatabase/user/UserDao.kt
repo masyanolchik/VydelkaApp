@@ -19,7 +19,7 @@ interface UserDao {
     @Delete
     fun deleteUserOrderHistoryCrossRef(userOrderHistoryCrossRef: UserOrderHistoryCrossRef)
 
-    @Insert(onConflict = REPLACE)
+    @Insert
     fun addProductFavoriteCrossRef(productFavoriteCrossRef: UserProductFavoriteCrossRef)
 
     @Delete
@@ -40,6 +40,7 @@ interface UserDao {
     @Query("SELECT EXISTS (SELECT * FROM users WHERE username=:userName)")
     fun isUserExists(userName: String): Boolean
 
+    @Transaction
     @Query("SELECT * from users WHERE username=:userName")
     fun getUserByUsername(userName: String): LocalUserWithAdditionalFields
 

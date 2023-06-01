@@ -30,7 +30,17 @@ class CoreProductRepository(
     }
 
     override fun getProductById(productId: Int): Flow<Result<Product>> {
-        return localDataSource.getProductById(productId)
+        return fetchProducts()
+            .flatMapLatest { result ->
+                when(result) {
+                    is Result.Success -> {
+                        localDataSource.getProductById(productId)
+                    }
+                    is Result.Completed -> flowOf(Result.Completed())
+                    is Result.Error -> flowOf(Result.Error(result.throwable))
+                    is Result.Loading -> flowOf(Result.Loading())
+                }
+            }
     }
 
     override fun getTopProducts(): Flow<Result<List<Product>>> {
@@ -53,10 +63,29 @@ class CoreProductRepository(
     }
 
     override fun getProductsByCategoryId(categoryId: Int): Flow<Result<List<Product>>> {
-        return localDataSource.getProductsByCategoryId(categoryId)
+        return fetchProducts()
+            .flatMapLatest {result ->
+                when(result) {
+                    is Result.Success -> {
+                        localDataSource.getProductsByCategoryId(categoryId)
+                    }
+                    is Result.Completed -> flowOf(Result.Completed())
+                    is Result.Error -> flowOf(Result.Error(result.throwable))
+                    is Result.Loading -> flowOf(Result.Loading())
+                }
+            }
+
     }
 
     override fun getProductsByTags(tags: List<Tag>): Flow<Result<List<Product>>> {
-        return localDataSource.getProductsByTags(tags)
+        return fetchProducts()
+            .flatMapLatest { result ->
+                when(result) {
+                    is Result.Success -> {
+                        localDataSource.getProductsByTags(tags)
+                    }
+                   else -> flowOf(result)
+                }
+            }
     }
 }

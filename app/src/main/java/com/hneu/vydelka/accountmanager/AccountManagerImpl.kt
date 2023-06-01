@@ -110,8 +110,15 @@ class AccountManagerImpl @Inject constructor(
             addToFavoritesUseCase
                 .invoke(_currentUser.id, product)
                 .flowOn(Dispatchers.IO)
-                .flatMapLatest {
-                    fetchFavoriteProductsUseCase.invoke(_currentUser.id)
+                .flatMapLatest {result ->
+                    when(result) {
+                        is Result.Success -> {
+                            fetchFavoriteProductsUseCase.invoke(_currentUser.id)
+                        }
+                        is Result.Completed -> flowOf(Result.Completed())
+                        is Result.Error -> flowOf(Result.Error(result.throwable))
+                        is Result.Loading -> flowOf(Result.Loading())
+                    }
                 }
                 .collectLatest {
                     favoritesFlow.emit(it)

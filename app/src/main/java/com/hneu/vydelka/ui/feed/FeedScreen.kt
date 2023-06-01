@@ -72,10 +72,18 @@ fun Feed(
                 when(promoListState) {
                     is Result.Loading -> CircularProgressIndicator()
                     is Result.Success -> {
+                        val rememberedList = remember { (promoListState as Result.Success<List<Promo>>).data }
                         val rememberedAdapter = remember(openPromoScreenDialog, openPromoScreenId) {
                             CarouselImageAdapter() {
                                 openPromoScreenDialog = !openPromoScreenDialog
                                 openPromoScreenId = it.promoId
+                            }.apply {
+                                submitList(
+                                    rememberedList.map {
+                                        CarouselImageAdapter
+                                            .CarouselData(it.name, it.titleImageSrc, it.id)
+                                    }
+                                )
                             }
                         }
                         AndroidView(
@@ -90,9 +98,7 @@ fun Feed(
                                 clipChildren = false
                                 clipToPadding = false
                             } },
-                            update = {
-                                rememberedAdapter.submitList((promoListState as Result.Success<List<Promo>>).data.map { CarouselImageAdapter.CarouselData(it.name, it.titleImageSrc, it.id) })
-                            },
+
                         )
                     }
                     else -> { }

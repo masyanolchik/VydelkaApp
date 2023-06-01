@@ -16,6 +16,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -48,7 +49,6 @@ fun ProductScreen(
     productViewModel: ProductViewModel = hiltViewModel(),
     id: Int = 0,
 ) {
-    val carouselImageAdapter = CarouselImageAdapter(true) {}
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val cart by orderViewModel.cartFlow.collectAsStateWithLifecycle()
     var isProductAddedToCart by rememberSaveable {
@@ -142,6 +142,17 @@ fun ProductScreen(
                         orderViewModel.removeProductFromFavorites(productObject)
                     }
                 }
+                val carouselImageAdapter = remember(productObject) {
+                    CarouselImageAdapter(true) {}.apply {
+                        submitList(productObject.images.map {
+                            CarouselImageAdapter.CarouselData(
+                                productObject.name,
+                                it,
+                                productObject.id
+                            )
+                        })
+                    }
+                }
                 LazyColumn(modifier = Modifier.padding(it)) {
                     item {
                         AndroidView(
@@ -156,15 +167,6 @@ fun ProductScreen(
                                 clipChildren = false
                                 clipToPadding = false
                             } },
-                            update = {
-                                carouselImageAdapter.submitList(productObject.images.map {
-                                    CarouselImageAdapter.CarouselData(
-                                        productObject.name,
-                                        it,
-                                        productObject.id
-                                    )
-                                })
-                            },
                         )
                         Text(
                             text = stringResource(R.string.product_code_label, productObject.id),
