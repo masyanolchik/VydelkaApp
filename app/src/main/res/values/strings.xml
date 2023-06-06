@@ -58,4 +58,13 @@
     <string name="product_return_label">Обмін/Повернення: %1$d днів</string>
     <string name="product_characteristics_label">Характеристики</string>
     <string name="product_description_label">Опис</string>
+    <string name="new_order_status">Нове</string>
+    <string name="low_price_sorting_method">Спочатку найдешевші</string>
+    <string name="high_price_sorting_method">Спочатку дорожчі</string>
+    <string name="apply_filters">Застосувати фільтри</string>
+    <string name="filter_price_from">Від</string>
+    <string name="filter_price_to">До</string>
+    <string name="apply">Застосувати</string>
+    <string name="search_error">Сталася помилка, поставте свічку в церкві за нас</string>
+    <string name="search_nothing_found">Нічого не знайдено за введеним запитом</string>
 </resources>

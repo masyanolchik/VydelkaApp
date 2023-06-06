@@ -31,7 +31,8 @@ fun MainTopBar(
     showLogo: Boolean = true,
     showSearch: Boolean = false,
     badgeNumber: Int = 0,
-    onCartButtonClick: () -> Unit,) {
+    onQueryChanged: (String) -> Unit = {},
+    onCartButtonClick: () -> Unit = {},) {
     var text by rememberSaveable { mutableStateOf("") }
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
@@ -53,7 +54,10 @@ fun MainTopBar(
                     val (searchBarRef, cartRef) = createRefs()
                     SearchBar(
                         query = text,
-                        onQueryChange = { text = it },
+                        onQueryChange = {
+                            text = it
+                            onQueryChanged(it)
+                        },
                         onSearch = {  },
                         active = false,
                         onActiveChange = {},

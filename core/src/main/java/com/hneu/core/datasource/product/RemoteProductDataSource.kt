@@ -7,5 +7,12 @@ import com.hneu.core.domain.request.Result
 
 interface RemoteProductDataSource {
     fun getProducts(): Flow<Result<List<Product>>>
+    fun getSortedProducts(sortOrderOrdinal: Int): Flow<Result<List<Product>>>
     fun getTopProducts(): Flow<Result<List<Product>>>
+    fun searchByQuery(searchQuery: String): Flow<Result<List<Product>>>
+
+    companion object {
+        const val LOW_PRICE_SORT = 0
+        const val HIGH_PRICE_SORT = 1
+    }
 }

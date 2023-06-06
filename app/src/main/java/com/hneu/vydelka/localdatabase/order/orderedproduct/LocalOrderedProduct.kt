@@ -16,7 +16,6 @@ import com.hneu.vydelka.localdatabase.product.toDomain
         ForeignKey(
             parentColumns = ["productId"],
             childColumns = ["productId"],
-            onDelete = ForeignKey.CASCADE,
             entity = LocalProduct::class,
         ),
     ]

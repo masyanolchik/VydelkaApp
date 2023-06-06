@@ -21,6 +21,7 @@ import com.hneu.vydelka.ui.order.OrderViewModel
 import kotlinx.coroutines.launch
 import com.hneu.core.domain.request.Result
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOn
 
@@ -53,6 +54,7 @@ fun MainScreen(
     val cart by orderViewModel.cartFlow.collectAsStateWithLifecycle()
     val favoriteProducts by favoritesViewModel.favoritesProducts.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val searchStateMutableFlow = remember { MutableStateFlow("") }
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackbarHostState)
@@ -62,6 +64,9 @@ fun MainScreen(
                 MainTopBar(
                     showLogo = showLogo,
                     showSearch = showSearchTextField,
+                    onQueryChanged = {
+                        searchStateMutableFlow.value = it
+                    },
                     badgeNumber = cart.orderedProducts.size
                 ) {
                     openBottomSheet = !openBottomSheet
@@ -74,7 +79,7 @@ fun MainScreen(
             }
         },
     ) {
-        NavigationWrapper(navController,cart,favoriteProducts, scrollState, it) { route ->
+        NavigationWrapper(navController,cart,favoriteProducts, scrollState, searchStateMutableFlow, it) { route ->
             when {
                 route == BottomMenuItem.FeedScreen.route -> {
                     showMainTopAppbar = true

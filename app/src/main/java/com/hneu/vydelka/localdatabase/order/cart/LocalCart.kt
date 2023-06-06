@@ -21,8 +21,8 @@ import com.hneu.vydelka.localdatabase.user.toDomain
     ]
 )
 data class LocalCart(
-    @PrimaryKey val cartId: Int,
     val userId: Int?,
+    @PrimaryKey(autoGenerate = true) val cartId: Int = 0,
 )
 
 fun LocalCartWithAdditionalFields.toDomain() =  Cart(
@@ -33,7 +33,14 @@ fun LocalCartWithAdditionalFields.toDomain() =  Cart(
 
 
 fun Cart.fromDomain() =
-    LocalCart(
-        cartId = id,
-        userId = optionalUserId
-    )
+    if(id != 0) {
+        LocalCart(
+            cartId = id,
+            userId = optionalUserId
+        )
+    } else {
+        LocalCart(
+            userId = optionalUserId
+        )
+    }
+

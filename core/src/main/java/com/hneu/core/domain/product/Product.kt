@@ -21,6 +21,22 @@ data class Product(
     }
 
     fun matchesFilterCriteria(filter: FilterModel) : Boolean {
-        return false
+        if(price in filter.priceRangeStart..filter.priceRangeEnd) {
+            var matchesFilter = true
+            when {
+                attributes.keys.containsAll(filter.selectedAttributes.keys) -> {
+                    filter.selectedAttributes.keys.forEach {
+                        matchesFilter = filter.selectedAttributes[it]?.contains(attributes[it]) ?: false
+                        if(!matchesFilter) {
+                            return matchesFilter
+                        }
+                    }
+                }
+                else -> { matchesFilter = filter.selectedAttributes.keys.isEmpty() }
+            }
+            return matchesFilter
+        } else {
+            return false
+        }
     }
 }

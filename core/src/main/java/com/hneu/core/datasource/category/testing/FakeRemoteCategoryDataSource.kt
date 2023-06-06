@@ -13,7 +13,17 @@ class FakeRemoteCategoryDataSource: RemoteCategoryDataSource {
         flowOf(Result.Success(FAKE_LIST))
 
     companion object {
-        val FAKE_ATTRIBUTES_FOR_VACUUM_CLEANERS = listOf(
+        val FAKE_ATTRIBUTES_FOR_VACUUM_CLEANER_POWER = listOf(
+            Attribute(
+                id = 6,
+                name = "700W",
+            ),
+            Attribute(
+                id = 7,
+                name = "3000W",
+            ),
+        )
+        val FAKE_ATTRIBUTES_FOR_VACUUM_CLEANERS_MANUFACTURER = listOf(
             Attribute(
                 id = 0,
                 name = "Samsung",
@@ -31,7 +41,12 @@ class FakeRemoteCategoryDataSource: RemoteCategoryDataSource {
             AttributeGroup(
                 id = 0,
                 name = "Виробник",
-                attributes = FAKE_ATTRIBUTES_FOR_VACUUM_CLEANERS,
+                attributes = FAKE_ATTRIBUTES_FOR_VACUUM_CLEANERS_MANUFACTURER,
+            ),
+            AttributeGroup(
+                id = 1,
+                name = "Потужність",
+                attributes = FAKE_ATTRIBUTES_FOR_VACUUM_CLEANER_POWER,
             )
         )
 
@@ -51,7 +66,7 @@ class FakeRemoteCategoryDataSource: RemoteCategoryDataSource {
         )
         val FAKE_ATTRIBUTE_GROUPS_MOBILE_PHONES = listOf(
             AttributeGroup(
-                id = 1,
+                id = 2,
                 name = "Виробник",
                 attributes = FAKE_ATTRIBUTES_MOBILE_PHONES,
             )

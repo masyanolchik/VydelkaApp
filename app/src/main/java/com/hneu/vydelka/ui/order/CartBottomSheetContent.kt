@@ -77,8 +77,6 @@ fun CartBottomSheetContent(
         }
         if(cart.orderedProducts.isNotEmpty()) {
             Button(
-                // Note: If you provide logic outside of onDismissRequest to remove the sheet,
-                // you must additionally handle intended state cleanup, if any.
                 onClick = {
                     onProceedOrderClick()
                 },

@@ -18,6 +18,7 @@ import com.hneu.vydelka.ui.feed.Feed
 import com.hneu.vydelka.ui.product.ProductScreen
 import com.hneu.vydelka.ui.profile.Profile
 import com.hneu.core.domain.request.Result
+import kotlinx.coroutines.flow.StateFlow
 
 
 @Composable
@@ -26,22 +27,29 @@ fun NavigationWrapper(
     cartState: Cart,
     favoritesState: Result<List<Product>>,
     scrollState: ScrollState,
+    searchStateFlow: StateFlow<String>,
     paddingValues: PaddingValues,
     onNavigate: (String) -> Unit,
 ) {
     NavHost(navController = navController, startDestination = BottomMenuItem.FeedScreen.route, modifier = Modifier.padding(paddingValues)) {
-        navigateTo(cartState, favoritesState, navController, onNavigate)
+        navigateTo(cartState, favoritesState, navController, onNavigate, searchStateFlow)
     }
 }
 
-fun NavGraphBuilder.navigateTo(cartState: Cart, favoritesState: Result<List<Product>>, navController: NavHostController, onNavigate: (String) -> Unit) {
+fun NavGraphBuilder.navigateTo(
+    cartState: Cart,
+    favoritesState: Result<List<Product>>,
+    navController: NavHostController,
+    onNavigate: (String) -> Unit,
+    searchStateFlow: StateFlow<String>
+) {
     composable(BottomMenuItem.FeedScreen.route) {
         onNavigate(BottomMenuItem.FeedScreen.route)
         Feed(cartState, navController,favoritesState)
     }
     composable(BottomMenuItem.CatalogueScreen.route) {
         onNavigate(BottomMenuItem.CatalogueScreen.route)
-        Categories(navController)
+        Categories(navController = navController, searchStateFlow = searchStateFlow)
     }
     composable(BottomMenuItem.FavoritesScreen.route) {
         onNavigate(BottomMenuItem.FavoritesScreen.route)

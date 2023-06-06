@@ -11,7 +11,33 @@ import java.math.BigDecimal
 class FakeRemoteProductDataSource : RemoteProductDataSource {
     override fun getProducts() = flowOf(Result.Success(FAKE_LIST))
 
+    override fun getSortedProducts(sortOrderOrdinal: Int): Flow<Result<List<Product>>> {
+        return flowOf(Result.Success(
+            when(sortOrderOrdinal) {
+                RemoteProductDataSource.LOW_PRICE_SORT -> FAKE_LIST.sortedBy { it.price }
+                RemoteProductDataSource.HIGH_PRICE_SORT -> FAKE_LIST.sortedByDescending { it.price }
+                else -> emptyList()
+            }
+          )
+        )
+    }
+
     override fun getTopProducts() = flowOf(Result.Success(listOf(FAKE_LIST[0],FAKE_LIST[2])))
+
+    override fun searchByQuery(searchQuery: String): Flow<Result<List<Product>>> {
+        val setOfProducts = mutableSetOf<Product>()
+        val sb = StringBuilder(searchQuery)
+        val searchQueries = sb.split(" ")
+        val queryWithProduct = FAKE_LIST.map { Pair(it, buildString { it.getSearchTags().forEach(::append) }) }
+        searchQueries.forEach {substrToFind ->
+            queryWithProduct.forEach {
+                if(it.second.contains(substrToFind, ignoreCase = true)) {
+                    setOfProducts.add(it.first)
+                }
+            }
+        }
+        return flowOf(Result.Success(setOfProducts.toList()))
+    }
 
     companion object {
         val FAKE_LIST = listOf(
@@ -31,7 +57,10 @@ class FakeRemoteProductDataSource : RemoteProductDataSource {
                     "https://images.samsung.com/is/image/samsung/p6pim/ua/vc07m2110sb-uk/gallery/ua-vc2100m-canister-with-anti-tangle-turbine-vc07m2110sb-uk-423746684?\$684_547_PNG\$",
                     "https://images.samsung.com/is/image/samsung/p6pim/ua/vc07m2110sb-uk/gallery/ua-vc2100m-canister-with-anti-tangle-turbine-vc07m2110sb-uk-423746685?\$684_547_PNG\$",
                 ),
-                attributes = mutableMapOf(Pair(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0], FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0].attributes[0])),
+                attributes = mutableMapOf(
+                    Pair(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0], FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0].attributes[0]),
+                    Pair(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[1],  FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[1].attributes[0]),
+                ),
             ),
             Product(
                 id = 1,
@@ -49,7 +78,10 @@ class FakeRemoteProductDataSource : RemoteProductDataSource {
                     "https://www.dragonelectronics.mu/assets/img/sa/VC5420NHT/VC5420NHT_03.webp",
                     "https://www.dragonelectronics.mu/assets/img/sa/VC5420NHT/VC5420NHT_04.webp",
                 ),
-                attributes = mutableMapOf(Pair(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0], FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0].attributes[1])),
+                attributes = mutableMapOf(
+                    Pair(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0], FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0].attributes[1]),
+                    Pair(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[1],  FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[1].attributes[1]),
+                    ),
             ),
             Product(
                 id = 2,

@@ -52,7 +52,15 @@ class RoomProductDataSource @Inject constructor(
             products.forEach {
                 saveProductInternal(it)
             }
-            getProducts()
+            val productsList = mutableListOf<Product>()
+            products.forEach {
+                val productLocal = productDao.getProduct(it.id)
+                val attributeGroups = categoryDao.getAttributeGroupsForCategory(productLocal.localProduct.categoryId).map {
+                    attributeGroupDao.getAttributeGroupWithAllowedValues(it.attributeGroupId).toDomain()
+                }
+                productsList.add(productDao.getProduct(it.id).toDomain(attributeGroups))
+            }
+            flowOf(Result.Success(productsList))
         } catch (e: Exception) {
             flowOf(Result.Error(e))
         }

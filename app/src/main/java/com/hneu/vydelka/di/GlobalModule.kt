@@ -3,6 +3,7 @@ package com.hneu.vydelka.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.hneu.vydelka.VydelkaApplication
 import com.hneu.vydelka.accountmanager.AccountManager
 import com.hneu.vydelka.accountmanager.AccountManagerImpl
 import com.hneu.vydelka.di.coroutinesscopes.DefaultDispatcher
@@ -34,6 +35,12 @@ interface GlobalModule {
 
     companion object {
         private const val PREFERENCES_KEY = "VYDELKA_APP_PREF"
+
+        @Singleton
+        @Provides
+        fun provideApplication(@ApplicationContext appContext: Context): VydelkaApplication {
+            return appContext as VydelkaApplication
+        }
 
         @Singleton
         @Provides

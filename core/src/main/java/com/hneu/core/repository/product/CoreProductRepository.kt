@@ -7,6 +7,7 @@ import com.hneu.core.domain.product.Tag
 import com.hneu.core.domain.request.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -25,6 +26,32 @@ class CoreProductRepository(
                         localDataSource.saveProducts(result.data)
                     }
                     else -> flowOf(result)
+                }
+            }
+    }
+
+    override fun fetchSortedProductsByCategoryId(
+        sortOrderOrdinal: Int,
+        categoryId: Int
+    ): Flow<Result<List<Product>>> {
+        return remoteDataSource
+            .getSortedProducts(sortOrderOrdinal)
+            .flatMapLatest { result ->
+                when(result) {
+                    is Result.Success -> {
+                        localDataSource.saveProducts(result.data)
+                    }
+                    else -> flowOf(result)
+                }
+            }.combine(localDataSource.getProductsByCategoryId(categoryId)) { sortedItems, categorisedItems ->
+                if(sortedItems is Result.Success && categorisedItems is Result.Success) {
+                    val dataSorted = sortedItems.data
+                    val dataCategorised = categorisedItems.data
+                    Result.Success(dataSorted.filter {productSorted ->
+                        dataCategorised.map { it.id }.contains(productSorted.id)
+                    })
+                } else {
+                    Result.Completed()
                 }
             }
     }
@@ -85,6 +112,18 @@ class CoreProductRepository(
                         localDataSource.getProductsByTags(tags)
                     }
                    else -> flowOf(result)
+                }
+            }
+    }
+
+    override fun searchByQuery(searchQuery: String): Flow<Result<List<Product>>> {
+        return remoteDataSource.searchByQuery(searchQuery)
+            .flatMapLatest { result ->
+                when(result) {
+                    is Result.Success -> {
+                        localDataSource.saveProducts(result.data)
+                    }
+                    else -> flowOf(result)
                 }
             }
     }

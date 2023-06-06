@@ -20,11 +20,11 @@ class RoomCartDataSource @Inject constructor(
 ) : LocalCartDataSource {
     override fun saveCart(cart: Cart): Flow<Result<Cart>> {
         return try {
-            cartDao.addCart(cart.fromDomain())
+            val cartId = cartDao.addCart(cart.fromDomain())
             cart.orderedProducts.forEach {
                 orderedProductDao.addOrderedProduct(it.fromDomain())
                 cartDao.addOrderedProductCrossRef(CartOrderedProductsCrossRef(
-                    cartId = cart.id,
+                    cartId = cartId.toInt(),
                     orderedProductId = it.fromDomain().orderedProductId),
                 )
             }

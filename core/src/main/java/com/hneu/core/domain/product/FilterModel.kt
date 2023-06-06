@@ -6,5 +6,5 @@ import java.math.BigDecimal
 data class FilterModel(
     val priceRangeStart: BigDecimal,
     val priceRangeEnd: BigDecimal,
-    val selectedAttributes: Set<Attribute>,
+    val selectedAttributes: Map<AttributeGroup, Set<Attribute>>,
 )

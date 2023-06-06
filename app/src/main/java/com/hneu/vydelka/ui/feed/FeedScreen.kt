@@ -43,6 +43,7 @@ import com.hneu.vydelka.ui.navigation.NavigationRoutes
 import com.hneu.core.domain.request.Result
 import com.hneu.vydelka.accountmanager.AccountManagerImpl
 import com.hneu.vydelka.ui.categories.CategoriesViewModel
+import com.hneu.vydelka.ui.favorites.FavoritesViewModel
 
 @Composable
 fun Feed(
@@ -245,17 +246,12 @@ fun Feed(
                             val productList = remember { ((products[it.category.id] as Result.Success<List<Product>>).data).toMutableStateList() }
                             SectionLabel(text = it.category.name)
                             productList.forEach {
-                                var isProductAddedToCart by rememberSaveable {
-                                    mutableStateOf(
-                                        cart.orderedProducts.map {op ->
-                                            op.product.id
-                                        }.contains(it.id)
-                                    )
-                                }
-                                var isProductFavorited by rememberSaveable { mutableStateOf(when(favoritesState) {
-                                    is Result.Success ->  favoritesState.data.map { it.id }.contains(it.id)
-                                    else -> false
-                                }) }
+                                var isProductAddedToCart = cart.orderedProducts.map {op -> op.product.id }.contains(it.id)
+                                var isProductFavorited =
+                                    when(favoritesState) {
+                                        is Result.Success ->  (favoritesState as Result.Success<List<Product>>).data.map { it.id }.contains(it.id)
+                                        else -> false
+                                    }
 
                                 ProductCard(
                                     title = it.name,

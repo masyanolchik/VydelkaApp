@@ -17,6 +17,7 @@ import com.hneu.core.domain.product.Category
 import com.hneu.core.domain.product.Product
 import com.hneu.core.domain.request.Result
 import com.hneu.core.usecase.category.FetchCategoryUseCase
+import com.hneu.core.usecase.product.FindProductsBySearchQueryUseCase
 import com.hneu.core.usecase.product.GetProductsByCategoryIdUseCase
 import com.hneu.vydelka.accountmanager.AccountManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,6 +37,7 @@ import javax.inject.Inject
 class CategoriesViewModel @Inject constructor(
     private val fetchCategoryUseCase: FetchCategoryUseCase,
     private val productsByCategoryIdUseCase: GetProductsByCategoryIdUseCase,
+    private val findProductsBySearchQueryUseCase: FindProductsBySearchQueryUseCase,
     private val accountManager: AccountManager,
 ): ViewModel() {
 
@@ -72,9 +74,16 @@ class CategoriesViewModel @Inject constructor(
         MutableStateFlow<Result<List<CategoryNode>>>(Result.Loading())
     val categoryList = _categoryList
 
+    private val _currentCategory = MutableStateFlow<Category?>(null)
+    val currentCategory = _currentCategory
+
     private val _productList =
         MutableStateFlow<Result<List<Product>>>(Result.Loading())
     val productStateFlow = _productList
+
+    private val _foundProductList =
+        MutableStateFlow<Result<List<Product>>>(Result.Loading())
+    val foundProductListStateFlow = _foundProductList
 
     init {
         fetchCategoryList()
@@ -115,6 +124,36 @@ class CategoriesViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    fun performSearch(searchQuery: String) {
+        viewModelScope.launch {
+            findProductsBySearchQueryUseCase
+                .invoke(searchQuery)
+                .flowOn(Dispatchers.IO)
+                .distinctUntilChanged()
+                .collectLatest {
+                    _foundProductList.emit(it)
+                }
+        }
+    }
+
+    fun getCategoryById(id: Int): StateFlow<Category?> {
+        viewModelScope.launch {
+            categoryList.collectLatest { categoryResult ->
+                when(categoryResult) {
+                    is Result.Success -> {
+                        categoryResult.data.find {
+                            it.category.id == id
+                        }?.let {
+                            currentCategory.emit(it.category)
+                        }
+                    }
+                    else -> {}
+                }
+            }
+        }
+        return currentCategory
     }
 
     fun fetchProductsByCategoryId(categoryId: Int): StateFlow<Result<List<Product>>> {

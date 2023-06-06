@@ -90,7 +90,16 @@ class AccountManagerImpl @Inject constructor(
                         saveCartUseCase
                             .invoke(_cart)
                             .flowOn(Dispatchers.IO)
-                            .collect()
+                            .collectLatest {saveResult ->
+                                when(saveResult) {
+                                    is Result.Success -> {
+                                        _cart = saveResult.data
+                                        cartStateFlow.emit(_cart)
+                                    }
+                                    else -> {}
+                                }
+
+                            }
                     }
                 }
             }
@@ -213,6 +222,23 @@ class AccountManagerImpl @Inject constructor(
         _cart.deleteProductFromCart(product)
         coroutineScope.launch {
             saveCartUseCase.invoke(_cart)
+                .flowOn(Dispatchers.IO)
+                .collectLatest {
+                    when(it) {
+                        is Result.Success -> {
+                            cartStateFlow.emit(it.data)
+                        }
+                        else -> {}
+                    }
+                }
+        }
+        return cartStateFlow
+    }
+
+    override fun resetCart(): StateFlow<Cart> {
+        _cart = Cart(0, _currentUser.id, mutableListOf())
+        coroutineScope.launch {
+            saveCartUseCase(_cart)
                 .flowOn(Dispatchers.IO)
                 .collectLatest {
                     when(it) {

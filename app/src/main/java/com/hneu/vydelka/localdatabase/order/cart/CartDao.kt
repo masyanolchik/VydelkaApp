@@ -11,7 +11,7 @@ import androidx.room.Update
 @Dao
 interface CartDao {
     @Insert(onConflict = REPLACE)
-    fun addCart(localCart: LocalCart)
+    fun addCart(localCart: LocalCart): Long
 
     @Update(onConflict = REPLACE)
     fun updateCart(localCart: LocalCart)
@@ -29,6 +29,6 @@ interface CartDao {
     fun deleteOrderedProductCrossRef(cartOrderedProductsCrossRef: CartOrderedProductsCrossRef)
 
     @Transaction
-    @Query("SELECT * from carts WHERE userId=:userId")
+    @Query("SELECT * from carts WHERE userId=:userId AND cartId NOT IN (SELECT cart_id from orders)")
     fun getUserCart(userId: Int): LocalCartWithAdditionalFields
 }

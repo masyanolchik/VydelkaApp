@@ -39,6 +39,7 @@ fun Favorites(
     feedViewModel: FeedViewModel = hiltViewModel(),
     ) {
     val productsState by favoritesViewModel.favoritesProducts.collectAsStateWithLifecycle()
+    val currentCart by favoritesViewModel.userCart.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier.padding(16.dp),
     ) {
@@ -73,7 +74,17 @@ fun Favorites(
                 }
             )
                 Button(
-                    onClick = { },
+                    onClick = {
+                        when(productsState) {
+                            is Result.Success -> {
+                                (productsState as Result.Success<List<Product>>).data.forEach {
+                                    feedViewModel.addProductToCart(it)
+                                }
+                                favoritesViewModel.fetchFavorites()
+                            }
+                            else -> {}
+                        }
+                    },
                     modifier = Modifier
                         .constrainAs(buttonRef) {
                             top.linkTo(parent.top)
@@ -92,14 +103,11 @@ fun Favorites(
             when(productsState) {
                 is Result.Success -> {
                     val products = (productsState as Result.Success<List<Product>>).data
-                    items(products) {
-                        var isProductAddedToCart by rememberSaveable {
-                            mutableStateOf(
-                                cart.orderedProducts.map {op ->
+                    items(products, key = {it.id}) {
+                        var isProductAddedToCart =
+                                currentCart.orderedProducts.map {op ->
                                     op.product.id
                                 }.contains(it.id)
-                            )
-                        }
                         var isProductFavorited by rememberSaveable {  mutableStateOf(products.map { it.id }.contains(it.id)) }
                         ProductCard(
                             title = it.name,

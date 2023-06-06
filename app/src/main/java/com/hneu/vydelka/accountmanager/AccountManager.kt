@@ -18,6 +18,7 @@ interface AccountManager {
     fun addProductToCart(product: Product): StateFlow<Cart>
     fun changeProductQuantityInCart(product: Product, desiredQuantity: Int): StateFlow<Cart>
     fun removeProductFromCart(product: Product): StateFlow<Cart>
+    fun resetCart(): StateFlow<Cart>
     fun getOrders(): Flow<Result<List<Order>>>
     fun saveOrder(order: Order): Flow<Result<Order>>
 }

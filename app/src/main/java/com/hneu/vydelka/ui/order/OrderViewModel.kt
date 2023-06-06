@@ -1,8 +1,9 @@
 package com.hneu.vydelka.ui.order
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hneu.core.domain.order.Cart
 import com.hneu.core.domain.order.Order
 import com.hneu.core.domain.product.Product
 import com.hneu.vydelka.accountmanager.AccountManager
@@ -10,25 +11,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import com.hneu.core.domain.request.Result
 import com.hneu.core.usecase.order.SaveOrderUseCase
+import com.hneu.vydelka.R
+import com.hneu.vydelka.VydelkaApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 
 @HiltViewModel
 class OrderViewModel @Inject constructor(
+    application: VydelkaApplication,
     private val accountManager: AccountManager,
     private val saveOrderUseCase: SaveOrderUseCase,
-) : ViewModel() {
+) : AndroidViewModel(application) {
     val cartFlow = accountManager.getCart()
 
     private val _orderCreatedStatusFlow = MutableStateFlow<Result<Order>>(Result.Loading())
@@ -61,7 +60,7 @@ class OrderViewModel @Inject constructor(
                     Order(
                         id = -1,
                         dateOfOrder = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().time),
-                        orderStatus = "Нове",
+                        orderStatus = getApplication<VydelkaApplication>().getString(R.string.new_order_status),
                         nonRegisteredCustomerName = nameText,
                         nonRegisteredCustomerLastname = lastNameText,
                         nonRegisteredCustomerPhone = phoneText,
@@ -72,6 +71,7 @@ class OrderViewModel @Inject constructor(
                 )
                 .flowOn(Dispatchers.IO)
                 .collectLatest {
+                    accountManager.resetCart()
                     orderCreatedStatusFlow.emit(it)
                 }
         }

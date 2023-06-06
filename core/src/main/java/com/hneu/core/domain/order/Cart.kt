@@ -9,8 +9,8 @@ class Cart(
     val orderedProducts: MutableList<OrderedProduct>
 ) {
     fun addProductToCart(product: Product): Boolean {
-        val productsInCart = orderedProducts.map{ it.product }
-        return if(productsInCart.contains(product)) {
+        val productsInCart = orderedProducts.map{ it.product.id }
+        return if(productsInCart.contains(product.id)) {
             false
         } else {
             orderedProducts.add(OrderedProduct(orderedProducts.size, product, 1))
