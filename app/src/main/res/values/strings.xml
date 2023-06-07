@@ -67,4 +67,7 @@
     <string name="apply">Застосувати</string>
     <string name="search_error">Сталася помилка, поставте свічку в церкві за нас</string>
     <string name="search_nothing_found">Нічого не знайдено за введеним запитом</string>
+    <string name="user_order_confirmation_validation_required_field_error">Обов\'язкове поле!</string>
+    <string name="user_order_confirmation_validation_phone_error">Введіть коректний номер телефону</string>
+    <string name="order_confirmation_validation_error">Заповніть коректно форму</string>
 </resources>

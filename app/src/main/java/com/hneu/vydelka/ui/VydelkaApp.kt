@@ -152,6 +152,11 @@ fun MainScreen(
                     showOrderFormDialog = false
                     orderViewModel
                         .saveOrder(nameText, lastNameText, phoneText, addressText)
+                },
+                onError = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(it, duration = SnackbarDuration.Long)
+                    }
                 }
             )
         }

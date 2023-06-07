@@ -21,6 +21,23 @@ import com.hneu.vydelka.ui.order.components.UserOrderConfirmationInfoForm
 
 @Composable
 fun UserInfoScreen(onClose: () -> Unit, onProceed: () -> Unit) {
+    var nameText by rememberSaveable { mutableStateOf("") }
+    var lastNameText by rememberSaveable { mutableStateOf("") }
+    var phoneText by rememberSaveable { mutableStateOf("") }
+    var addressText by rememberSaveable { mutableStateOf("") }
+    var isNameValid by rememberSaveable {
+        mutableStateOf(nameText.isNotEmpty())
+    }
+    var isLastNameValid by rememberSaveable {
+        mutableStateOf(lastNameText.isNotEmpty())
+    }
+    var isPhoneNumberValid by rememberSaveable {
+        mutableStateOf(phoneText.isNotEmpty() && android.util.Patterns.PHONE.matcher(phoneText).matches())
+    }
+    var isAddressValid by rememberSaveable {
+        mutableStateOf(addressText.isNotEmpty())
+    }
+
     val topAppBarNavigationIcon: @Composable () -> Unit = {
         IconButton(onClick = onClose) {
             Icon(
@@ -34,7 +51,9 @@ fun UserInfoScreen(onClose: () -> Unit, onProceed: () -> Unit) {
     }
     val topAppBarActions: @Composable RowScope.() -> Unit = {
         TextButton(onClick = {
-            onProceed()
+            if(isNameValid && isLastNameValid && isPhoneNumberValid && isAddressValid) {
+                onProceed()
+            }
         }) {
             Text(
                 text= stringResource(id = R.string.profile_save_user_info),
@@ -44,10 +63,6 @@ fun UserInfoScreen(onClose: () -> Unit, onProceed: () -> Unit) {
         }
     }
 
-    var nameText by rememberSaveable { mutableStateOf("") }
-    var lastNameText by rememberSaveable { mutableStateOf("") }
-    var phoneText by rememberSaveable { mutableStateOf("") }
-    var addressText by rememberSaveable { mutableStateOf("") }
 
     FullScreenDialogWithElevatedTopAppBar(
         topAppBarTitle = topAppBarTitle,
@@ -60,10 +75,26 @@ fun UserInfoScreen(onClose: () -> Unit, onProceed: () -> Unit) {
             lastNameTextFieldValue = lastNameText,
             phoneTextFieldValue = phoneText,
             addressTextFieldValue = addressText,
-            onNameTextFieldValueChanged = { changedText -> nameText = changedText},
-            onLastNameTextFieldValueChanged = { changedText -> lastNameText = changedText},
-            onPhoneTextFieldValueChanged = { changedText -> phoneText = changedText },
-            onAddressTextFieldValueChanged = { changedText -> addressText = changedText },
+            onNameTextFieldValueChanged = {
+                nameText = it
+                isNameValid = it.isNotEmpty()
+            },
+            isNameValid = isNameValid,
+            onLastNameTextFieldValueChanged = {
+                lastNameText = it
+                isLastNameValid = it.isNotEmpty()
+            },
+            isLastNameValid = isLastNameValid,
+            onPhoneTextFieldValueChanged = {
+                phoneText = it
+                isPhoneNumberValid = phoneText.isNotEmpty() && android.util.Patterns.PHONE.matcher(phoneText).matches()
+            },
+            isPhoneNumberValid = isPhoneNumberValid,
+            onAddressTextFieldValueChanged = {
+                addressText = it
+                isAddressValid = it.isNotEmpty()
+            },
+            isAddressValid = isAddressValid,
         )
     }
 }

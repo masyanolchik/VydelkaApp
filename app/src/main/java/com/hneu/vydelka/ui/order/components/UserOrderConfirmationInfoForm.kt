@@ -14,22 +14,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.hneu.vydelka.R
 
 @Composable
 fun UserOrderConfirmationInfoForm(
-    nameTextFieldValue: String,
+    nameTextFieldValue: String = "",
     onNameTextFieldValueChanged: (String) -> Unit = { },
-    lastNameTextFieldValue: String,
+    isNameValid: Boolean = true,
+    lastNameTextFieldValue: String = "",
     onLastNameTextFieldValueChanged: (String) -> Unit = { },
-    phoneTextFieldValue: String,
+    isLastNameValid: Boolean = true,
+    phoneTextFieldValue: String = "",
     onPhoneTextFieldValueChanged: (String) -> Unit = { },
-    addressTextFieldValue: String,
+    isPhoneNumberValid: Boolean = true,
+    addressTextFieldValue: String = "",
     onAddressTextFieldValueChanged: (String) -> Unit = { },
+    isAddressValid: Boolean = true,
     paddingValues: PaddingValues = PaddingValues(),
 ) {
     Column(
@@ -49,8 +55,17 @@ fun UserOrderConfirmationInfoForm(
             )
             OutlinedTextField(
                 value = nameTextFieldValue,
+                isError = !isNameValid,
                 onValueChange = onNameTextFieldValueChanged,
                 label = { Text(stringResource(id = R.string.order_form_name_label)) },
+            )
+        }
+        if(!isNameValid) {
+            Text(
+                modifier = Modifier.padding(start = 56.dp),
+                text = stringResource(R.string.user_order_confirmation_validation_required_field_error),
+                fontSize = 14.sp,
+                color = Color.Red
             )
         }
         Row(
@@ -58,9 +73,18 @@ fun UserOrderConfirmationInfoForm(
         ) {
             OutlinedTextField(
                 value = lastNameTextFieldValue,
+                isError = !isLastNameValid,
                 onValueChange = onLastNameTextFieldValueChanged,
                 label = { Text(stringResource(id = R.string.order_form_lastname_label)) },
                 modifier = Modifier.padding(start = 40.dp)
+            )
+        }
+        if(!isLastNameValid) {
+            Text(
+                modifier = Modifier.padding(start = 56.dp),
+                text = stringResource(R.string.user_order_confirmation_validation_required_field_error),
+                fontSize = 14.sp,
+                color = Color.Red
             )
         }
         Row(
@@ -75,8 +99,17 @@ fun UserOrderConfirmationInfoForm(
             OutlinedTextField(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 value = phoneTextFieldValue,
+                isError = !isPhoneNumberValid,
                 onValueChange = onPhoneTextFieldValueChanged,
                 label = { Text(stringResource(id = R.string.order_form_phone_label)) },
+            )
+        }
+        if(!isPhoneNumberValid) {
+            Text(
+                modifier = Modifier.padding(start = 56.dp),
+                text = stringResource(R.string.user_order_confirmation_validation_phone_error),
+                fontSize = 14.sp,
+                color = Color.Red
             )
         }
         Row(
@@ -90,9 +123,29 @@ fun UserOrderConfirmationInfoForm(
             )
             OutlinedTextField(
                 value = addressTextFieldValue,
+                isError = !isAddressValid,
                 onValueChange = onAddressTextFieldValueChanged,
                 label = { Text(stringResource(id = R.string.order_form_address_label)) },
             )
         }
+        if(!isAddressValid) {
+            Text(
+                modifier = Modifier.padding(start = 56.dp),
+                text = stringResource(R.string.user_order_confirmation_validation_required_field_error),
+                fontSize = 14.sp,
+                color = Color.Red
+            )
+        }
     }
+}
+
+@Preview
+@Composable
+fun UserOrderConfirmationInfoFormPreview() {
+    UserOrderConfirmationInfoForm(
+        isNameValid = false,
+        isAddressValid = false,
+        isLastNameValid = false,
+        isPhoneNumberValid = false,
+    )
 }
