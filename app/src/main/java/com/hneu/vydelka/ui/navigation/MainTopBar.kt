@@ -31,9 +31,10 @@ fun MainTopBar(
     showLogo: Boolean = true,
     showSearch: Boolean = false,
     badgeNumber: Int = 0,
+    initialQuery: String = "",
     onQueryChanged: (String) -> Unit = {},
     onCartButtonClick: () -> Unit = {},) {
-    var text by rememberSaveable { mutableStateOf("") }
+    var text by rememberSaveable { mutableStateOf(initialQuery) }
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         title = {

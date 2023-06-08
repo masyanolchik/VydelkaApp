@@ -13,6 +13,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hneu.core.domain.order.Order
+import com.hneu.core.domain.product.Tag
 import com.hneu.vydelka.ui.favorites.FavoritesViewModel
 import com.hneu.vydelka.ui.navigation.*
 import com.hneu.vydelka.ui.order.CartBottomSheetContent
@@ -55,22 +56,44 @@ fun MainScreen(
     val favoriteProducts by favoritesViewModel.favoritesProducts.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val searchStateMutableFlow = remember { MutableStateFlow("") }
+    val searchTagsMutableStateFlow = remember {
+        MutableStateFlow(emptyList<Tag>())
+    }
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackbarHostState)
         },
         topBar = {
             if(showMainTopAppbar) {
-                MainTopBar(
-                    showLogo = showLogo,
-                    showSearch = showSearchTextField,
-                    onQueryChanged = {
-                        searchStateMutableFlow.value = it
-                    },
-                    badgeNumber = cart.orderedProducts.size
-                ) {
-                    openBottomSheet = !openBottomSheet
+                val tagMutableState by searchTagsMutableStateFlow.collectAsStateWithLifecycle()
+                if(tagMutableState.isNotEmpty()) {
+                    MainTopBar(
+                        showLogo = showLogo,
+                        showSearch = showSearchTextField,
+                        initialQuery = buildString { tagMutableState.forEach { append(it.name) } },
+                        onQueryChanged = {
+                            searchStateMutableFlow.value = it
+                            if(it.isEmpty()) {
+                                searchTagsMutableStateFlow.value = emptyList()
+                            }
+                        },
+                        badgeNumber = cart.orderedProducts.size
+                    ) {
+                        openBottomSheet = !openBottomSheet
+                    }
+                } else {
+                    MainTopBar(
+                        showLogo = showLogo,
+                        showSearch = showSearchTextField,
+                        onQueryChanged = {
+                            searchStateMutableFlow.value = it
+                        },
+                        badgeNumber = cart.orderedProducts.size
+                    ) {
+                        openBottomSheet = !openBottomSheet
+                    }
                 }
+
             }
         },
         bottomBar = {
@@ -79,7 +102,7 @@ fun MainScreen(
             }
         },
     ) {
-        NavigationWrapper(navController,cart,favoriteProducts, scrollState, searchStateMutableFlow, it) { route ->
+        NavigationWrapper(navController,cart,favoriteProducts, scrollState, searchStateMutableFlow, searchTagsMutableStateFlow, it) { route ->
             when {
                 route == BottomMenuItem.FeedScreen.route -> {
                     showMainTopAppbar = true

@@ -3,13 +3,18 @@ package com.hneu.vydelka.ui.profile
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EditNote
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FormatListBulleted
 import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.outlined.Key
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
@@ -18,6 +23,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,7 +32,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hneu.vydelka.R
+import com.hneu.vydelka.ui.profile.forgotpassword.ForgotPasswordScreen
 import com.hneu.vydelka.ui.profile.ordershistory.OrderHistoryScreen
+import com.hneu.vydelka.ui.profile.register.RegisterScreen
 import com.hneu.vydelka.ui.profile.userinfo.UserInfoScreen
 import com.hneu.vydelka.ui.profile.viewhistory.ViewHistoryScreen
 
@@ -34,7 +43,15 @@ fun Profile(navController: NavHostController = rememberNavController()) {
     var openOrderHistoryDialog by rememberSaveable { mutableStateOf(false) }
     var openViewHistoryDialog by rememberSaveable { mutableStateOf(false) }
     var openAccountDetailsDialog by rememberSaveable { mutableStateOf(false) }
-    var isUserLoggedIn = true
+    var openForgotPasswordDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var openRegisterProfile by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var isUserLoggedIn by rememberSaveable {
+        mutableStateOf(false)
+    }
     when {
         openOrderHistoryDialog -> {
             OrderHistoryScreen(
@@ -51,6 +68,18 @@ fun Profile(navController: NavHostController = rememberNavController()) {
             UserInfoScreen(
                 onClose = { openAccountDetailsDialog = false },
                 onProceed = { openAccountDetailsDialog = false }
+            )
+        }
+        openForgotPasswordDialog -> {
+            ForgotPasswordScreen(
+                onClose = { openForgotPasswordDialog = false },
+                onProceed = { _, _, _ -> openForgotPasswordDialog = false }
+            )
+        }
+        openRegisterProfile -> {
+            RegisterScreen(
+                onClose = { openRegisterProfile = false },
+                onProceed = { _, _, _, _, _, _, _ -> openRegisterProfile = false }
             )
         }
         else -> {
@@ -111,9 +140,27 @@ fun Profile(navController: NavHostController = rememberNavController()) {
                             }
                         )
                         Divider()
+                        ListItem(
+                            headlineContent = { Text(stringResource(id = R.string.profile_log_out_button)) },
+                            leadingContent = {
+                                Icon(
+                                    Icons.Filled.ExitToApp,
+                                    contentDescription = stringResource(id = R.string.profile_log_out_button),
+                                )
+                            },
+                            modifier = Modifier.clickable {
+                                isUserLoggedIn = false
+                            }
+                        )
+                        Divider()
                     }
                 }
             } else {
+                var isAuthorizationFailed by rememberSaveable { mutableStateOf(false) }
+                var usernameTextFieldValue by rememberSaveable { mutableStateOf("") }
+                var passwordTextFieldValue by rememberSaveable {
+                    mutableStateOf("")
+                }
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -124,9 +171,69 @@ fun Profile(navController: NavHostController = rememberNavController()) {
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
-                    FilledTonalButton(onClick = { /*TODO*/ }) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Person,
+                            contentDescription = stringResource(id = R.string.profile_username_text_field),
+                        )
+                        OutlinedTextField(
+                            value = usernameTextFieldValue,
+                            isError = isAuthorizationFailed,
+                            onValueChange = {
+                               usernameTextFieldValue = it
+                            },
+                            label = { Text(stringResource(id = R.string.profile_username_text_field)) },
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Key,
+                            contentDescription = stringResource(id = R.string.profile_password_text_field),
+                        )
+                        OutlinedTextField(
+                            value = passwordTextFieldValue,
+                            isError = isAuthorizationFailed,
+                            onValueChange = {
+                                passwordTextFieldValue = it
+                            },
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                            label = { Text(stringResource(id = R.string.profile_password_text_field)) },
+                        )
+                    }
+                    Row {
+                        FilledTonalButton(
+                            onClick = { isUserLoggedIn = true },
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.profile_not_logged_in_button),
+                            )
+                        }
+                        FilledTonalButton(onClick = {
+                            openRegisterProfile = true
+                        }) {
+                            Text(
+                                text = stringResource(id = R.string.profile_register_button),
+                            )
+                        }
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            openForgotPasswordDialog = true
+                        },
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
                         Text(
-                            text = stringResource(id = R.string.profile_not_logged_in_button),
+                            text = stringResource(id = R.string.profile_forgot_password_button),
                         )
                     }
                 }

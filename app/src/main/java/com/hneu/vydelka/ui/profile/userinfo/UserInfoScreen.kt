@@ -39,6 +39,7 @@ fun UserInfoScreen(onClose: () -> Unit, onProceed: () -> Unit) {
     }
 
     val topAppBarNavigationIcon: @Composable () -> Unit = {
+
         IconButton(onClick = onClose) {
             Icon(
                 imageVector = Icons.Outlined.Close,

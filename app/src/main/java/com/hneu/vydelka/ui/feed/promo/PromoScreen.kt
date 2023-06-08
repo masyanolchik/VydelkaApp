@@ -17,14 +17,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.hneu.core.domain.product.Tag
 import com.hneu.core.domain.promo.Promo
 import com.hneu.vydelka.R
 import com.hneu.vydelka.ui.order.components.FullScreenDialogWithElevatedTopAppBar
 import com.hneu.core.domain.request.Result
+import com.hneu.vydelka.ui.navigation.BottomMenuItem
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun PromoScreen(
+    tagsMutableStateFlow: MutableStateFlow<List<Tag>> = MutableStateFlow(emptyList()),
+    navController: NavHostController = rememberNavController(),
     promoViewModel: PromoViewModel = hiltViewModel(),
     promoId: Int = 0,
     onClose: () -> Unit = {},
@@ -66,11 +73,13 @@ fun PromoScreen(
                             text = promoObject.detailedDescription,
                             modifier = Modifier.fillMaxWidth(),
                         )
-                        /*Button(
+                        Button(
                             // Note: If you provide logic outside of onDismissRequest to remove the sheet,
                             // you must additionally handle intended state cleanup, if any.
                             onClick = {
-                                //
+                                onClose()
+                                tagsMutableStateFlow.value = promoObject.tags
+                                navController.navigate(BottomMenuItem.CatalogueScreen.route)
                             },
                             modifier = Modifier
                                 .padding(16.dp)
@@ -78,7 +87,7 @@ fun PromoScreen(
                                 .fillMaxWidth(),
                         ) {
                             Text(stringResource(id = R.string.continue_to_promo))
-                        }*/
+                        }
                     }
                 }
             }

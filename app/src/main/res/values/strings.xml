@@ -30,11 +30,18 @@
 
     <string name="profile_not_logged_in_message">Увійдіть до власного кабінет, щоб переглядати історію замовлень, переглядів та швидше оформлювати ваші покупки</string>
     <string name="profile_not_logged_in_button">Увійти</string>
+    <string name="profile_username_text_field">Username</string>
+    <string name="profile_email_text_field">Email</string>
+    <string name="profile_password_text_field">Пароль</string>
+    <string name="profile_forgot_password_button">Забули пароль</string>
+    <string name="profile_register_button">Реєстрація</string>
+    <string name="profile_log_out_button">Вийти</string>
     <string name="profile_my_orders">Мої замовлення</string>
     <string name="profile_view_history">Історія переглядів</string>
     <string name="profile_settings">Змінити контактну інформацію та адресу доставки</string>
     <string name="profile_save_user_info">Зберегти</string>
     <string name="profile_user_info_edit_title">Контактні дані</string>
+    <string name="profile_forgot_password_title">Відновити пароль</string>
 
     <string name="order_history_order_number_label">Номер: %1$s</string>
     <string name="order_history_order_status_label">Статус: %1$s</string>

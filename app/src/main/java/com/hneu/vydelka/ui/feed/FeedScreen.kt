@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.hneu.core.domain.order.Cart
 import com.hneu.core.domain.product.Product
+import com.hneu.core.domain.product.Tag
 import com.hneu.core.domain.promo.Promo
 import com.hneu.vydelka.R
 import com.hneu.vydelka.ui.feed.components.*
@@ -44,9 +45,11 @@ import com.hneu.core.domain.request.Result
 import com.hneu.vydelka.accountmanager.AccountManagerImpl
 import com.hneu.vydelka.ui.categories.CategoriesViewModel
 import com.hneu.vydelka.ui.favorites.FavoritesViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun Feed(
+    searchTags: MutableStateFlow<List<Tag>> = MutableStateFlow(emptyList()),
     cart: Cart = AccountManagerImpl.CART_UNREGISTERED_USER,
     navController: NavHostController = rememberNavController(),
     favoritesState: Result<List<Product>> = Result.Completed(),
@@ -57,7 +60,11 @@ fun Feed(
     var openPromoScreenId by rememberSaveable { mutableStateOf(0) }
 
     if(openPromoScreenDialog) {
-        PromoScreen(promoId = openPromoScreenId) {
+        PromoScreen(
+            tagsMutableStateFlow = searchTags,
+            navController = navController,
+            promoId = openPromoScreenId,
+        ) {
            openPromoScreenDialog = !openPromoScreenDialog
         }
     } else {

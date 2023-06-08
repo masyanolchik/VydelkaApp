@@ -15,10 +15,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hneu.core.domain.product.Category
 import com.hneu.core.domain.product.Product
+import com.hneu.core.domain.product.Tag
 import com.hneu.core.domain.request.Result
 import com.hneu.core.usecase.category.FetchCategoryUseCase
 import com.hneu.core.usecase.product.FindProductsBySearchQueryUseCase
 import com.hneu.core.usecase.product.GetProductsByCategoryIdUseCase
+import com.hneu.core.usecase.product.GetProductsByTagsUseCase
 import com.hneu.vydelka.accountmanager.AccountManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -38,6 +40,7 @@ class CategoriesViewModel @Inject constructor(
     private val fetchCategoryUseCase: FetchCategoryUseCase,
     private val productsByCategoryIdUseCase: GetProductsByCategoryIdUseCase,
     private val findProductsBySearchQueryUseCase: FindProductsBySearchQueryUseCase,
+    private val getProductsByTagsUseCase: GetProductsByTagsUseCase,
     private val accountManager: AccountManager,
 ): ViewModel() {
 
@@ -182,5 +185,17 @@ class CategoriesViewModel @Inject constructor(
 
     fun removeProductFromFavorites(product: Product) {
         accountManager.removeProductFromFavorites(product)
+    }
+
+    fun findByTags(searchTagsQuery: List<Tag>) {
+        viewModelScope.launch {
+            getProductsByTagsUseCase
+                .invoke(searchTagsQuery)
+                .flowOn(Dispatchers.IO)
+                .distinctUntilChanged()
+                .collectLatest {
+                    _foundProductList.emit(it)
+                }
+        }
     }
 }

@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.hneu.core.domain.order.Cart
 import com.hneu.core.domain.product.Product
+import com.hneu.core.domain.product.Tag
 import com.hneu.vydelka.ui.categories.Categories
 import com.hneu.vydelka.ui.categories.category.CategoryScreen
 import com.hneu.vydelka.ui.favorites.Favorites
@@ -18,6 +19,7 @@ import com.hneu.vydelka.ui.feed.Feed
 import com.hneu.vydelka.ui.product.ProductScreen
 import com.hneu.vydelka.ui.profile.Profile
 import com.hneu.core.domain.request.Result
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 
@@ -28,11 +30,12 @@ fun NavigationWrapper(
     favoritesState: Result<List<Product>>,
     scrollState: ScrollState,
     searchStateFlow: StateFlow<String>,
+    tagsMutableStateFlow: MutableStateFlow<List<Tag>>,
     paddingValues: PaddingValues,
     onNavigate: (String) -> Unit,
 ) {
     NavHost(navController = navController, startDestination = BottomMenuItem.FeedScreen.route, modifier = Modifier.padding(paddingValues)) {
-        navigateTo(cartState, favoritesState, navController, onNavigate, searchStateFlow)
+        navigateTo(cartState, favoritesState, navController, onNavigate, searchStateFlow, tagsMutableStateFlow)
     }
 }
 
@@ -41,15 +44,16 @@ fun NavGraphBuilder.navigateTo(
     favoritesState: Result<List<Product>>,
     navController: NavHostController,
     onNavigate: (String) -> Unit,
-    searchStateFlow: StateFlow<String>
-) {
+    searchStateFlow: StateFlow<String>,
+    tagsMutableStateFlow: MutableStateFlow<List<Tag>>,
+    ) {
     composable(BottomMenuItem.FeedScreen.route) {
         onNavigate(BottomMenuItem.FeedScreen.route)
-        Feed(cartState, navController,favoritesState)
+        Feed(tagsMutableStateFlow, cartState, navController,favoritesState)
     }
     composable(BottomMenuItem.CatalogueScreen.route) {
         onNavigate(BottomMenuItem.CatalogueScreen.route)
-        Categories(navController = navController, searchStateFlow = searchStateFlow)
+        Categories(navController = navController, searchStateFlow = searchStateFlow, searchTags = tagsMutableStateFlow)
     }
     composable(BottomMenuItem.FavoritesScreen.route) {
         onNavigate(BottomMenuItem.FavoritesScreen.route)

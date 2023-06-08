@@ -2,6 +2,7 @@ package com.hneu.core.datasource.product.testing
 
 import com.hneu.core.datasource.category.testing.FakeRemoteCategoryDataSource
 import com.hneu.core.datasource.product.RemoteProductDataSource
+import com.hneu.core.datasource.promo.testing.FakeRemotePromoDataSource
 import com.hneu.core.domain.product.Product
 import com.hneu.core.domain.request.Result
 import kotlinx.coroutines.flow.Flow
@@ -61,6 +62,7 @@ class FakeRemoteProductDataSource : RemoteProductDataSource {
                     Pair(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0], FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[0].attributes[0]),
                     Pair(FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[1],  FakeRemoteCategoryDataSource.FAKE_LIST[2].attributeGroups[1].attributes[0]),
                 ),
+                additionalTags = FakeRemotePromoDataSource.FAKE_LIST[0].tags.toSet()
             ),
             Product(
                 id = 1,
