@@ -36,6 +36,7 @@ fun PromoScreen(
     promoId: Int = 0,
     onClose: () -> Unit = {},
 ) {
+    promoViewModel.getPromoById(promoId)
     val topAppBarNavigationIcon: @Composable () -> Unit = {
         IconButton(onClick = onClose) {
             Icon(
@@ -44,7 +45,7 @@ fun PromoScreen(
             )
         }
     }
-    val promo by promoViewModel.getPromoById(promoId).collectAsStateWithLifecycle()
+    val promo by promoViewModel.promoFlow.collectAsStateWithLifecycle()
     when(promo) {
         is Result.Success -> {
             val promoObject = (promo as Result.Success<Promo>).data
@@ -63,7 +64,7 @@ fun PromoScreen(
                             .fillMaxSize()
                     ) {
                         AsyncImage(
-                            model = promoObject.titleImageSrc,
+                            model = promoObject.promoImageSrc,
                             contentDescription = promoObject.name,
                             modifier = Modifier
                                 .padding(vertical = 8.dp)
@@ -74,8 +75,6 @@ fun PromoScreen(
                             modifier = Modifier.fillMaxWidth(),
                         )
                         Button(
-                            // Note: If you provide logic outside of onDismissRequest to remove the sheet,
-                            // you must additionally handle intended state cleanup, if any.
                             onClick = {
                                 onClose()
                                 tagsMutableStateFlow.value = promoObject.tags

@@ -21,4 +21,9 @@ interface AccountManager {
     fun resetCart(): StateFlow<Cart>
     fun getOrders(): Flow<Result<List<Order>>>
     fun saveOrder(order: Order): Flow<Result<Order>>
+    fun loginByUsernameAndPassword(username: String, password: String): Flow<Result<User>>
+    fun register(user: User): Flow<Result<User>>
+    fun changePassword(user: User): Flow<Result<User>>
+    fun changeContacts(user: User): Flow<Result<User>>
+    fun signOut(): Flow<Result<User>>
 }

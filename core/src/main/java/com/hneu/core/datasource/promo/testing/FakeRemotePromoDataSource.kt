@@ -17,7 +17,7 @@ class FakeRemotePromoDataSource : RemotePromoDataSource {
             Promo(
                 id = 0,
                 name = "Звернення",
-                titleImageSrc = "https://i.imgur.com/ShNJtWa.png",
+                promoImageSrc = "https://i.imgur.com/ShNJtWa.png",
                 detailedDescription = "ЗВЕРНЕННЯ\n" +
                         "ДО ЙОГО БЕЗОСІБНОЇ ЯСНОВЕЛЬМОЖНОСТИ ГЕТЬМАНА КРОПИВАЧУ\n" +
                         "\n" +
@@ -44,7 +44,7 @@ class FakeRemotePromoDataSource : RemotePromoDataSource {
             Promo(
                 id = 1,
                 name = "ЩО БУЛО ПРИ ХМЕЛЬНИЦЬКОМУ, ЩО МИ ВТРАТИЛИ",
-                titleImageSrc = "https://galinfo.com.ua/media/gallery/full/k/h/khmel.jpg",
+                promoImageSrc = "https://galinfo.com.ua/media/gallery/full/k/h/khmel.jpg",
                 detailedDescription = "1. МАЗАНКИ РОБИЛИ З МОЛОЧНОГО ВАПНА, ХОЧ ВІДЛАМУЙ ШМАТОЧОК СТІНИ І ЇЖ\n" +
                         "2. СИЛА ГРАВІТАЦІЇ БУЛА СЛАБША В 4 РАЗИ, КОЗАКИ В КАФУ ЗАСКАКУВАЛИ З РОЗБІГУ ПЕРЕСКОЧИВШИ МОРЕ\n" +
                         "3. ЛЮДИ ЖИЛИ ВІЧНО І ЗАЛУПУ МАЛИ ЯК МАКОГОН, АЛЕ В СЕРЕДНЬОМУ У 80 РОКІВ ХОРОБРО ПОМИРАЛИ В БОЮ\n" +

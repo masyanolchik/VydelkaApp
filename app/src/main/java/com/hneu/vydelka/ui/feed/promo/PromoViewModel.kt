@@ -17,9 +17,10 @@ import kotlinx.coroutines.flow.flowOn
 @HiltViewModel
 class PromoViewModel @Inject constructor(private val fetchPromosUseCase: FetchPromosUseCase): ViewModel() {
 
+    private val _promoFlow = MutableStateFlow<Result<Promo>>(Result.Loading())
+    val promoFlow: StateFlow<Result<Promo>> = _promoFlow
 
-    fun getPromoById(id: Int): StateFlow<Result<Promo>> {
-        val mutableStateFlow = MutableStateFlow<Result<Promo>>(Result.Loading())
+    fun getPromoById(id: Int) {
         viewModelScope.launch {
             fetchPromosUseCase
                 .invoke()
@@ -28,14 +29,13 @@ class PromoViewModel @Inject constructor(private val fetchPromosUseCase: FetchPr
                     if (it is Result.Success) {
                         val product = it.data.find { it.id == id }
                         if(product != null) {
-                            mutableStateFlow.emit(Result.Success(product))
+                            _promoFlow.emit(Result.Success(product))
                         } else {
-                            mutableStateFlow.emit(Result.Completed())
+                            _promoFlow.emit(Result.Completed())
                         }
                     }
                 }
         }
-        return mutableStateFlow
     }
 
 }

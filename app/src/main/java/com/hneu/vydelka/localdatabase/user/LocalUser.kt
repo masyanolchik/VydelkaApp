@@ -3,7 +3,6 @@ package com.hneu.vydelka.localdatabase.user
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.hneu.core.domain.order.Order
 import com.hneu.core.domain.user.User
 import com.hneu.vydelka.localdatabase.order.toDomain
 //import com.hneu.vydelka.localdatabase.order.toDomain
@@ -26,9 +25,9 @@ fun LocalUserWithAdditionalFields.toDomain() =
         username = localUser.userName,
         password = localUser.password,
         name = localUser.name,
-        lastname = localUser.lastName,
+        lastName = localUser.lastName,
         phoneNumber = localUser.phoneNumber,
-        address = localUser.address,
+        shippingAddress = localUser.address,
         orderHistory = userOrderHistory.map { it.toDomain() },
         productHistory = userProductHistory.map { it.toDomain() },
         favoriteProducts = userProductFavorites.map { it.toDomain() }
@@ -40,8 +39,8 @@ fun User.fromDomain() =
         userName = username,
         password = password,
         name = name,
-        lastName = lastname,
+        lastName = lastName,
         phoneNumber = phoneNumber,
-        address = address,
+        address = shippingAddress,
     )
 

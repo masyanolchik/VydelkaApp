@@ -102,7 +102,7 @@ fun MainScreen(
             }
         },
     ) {
-        NavigationWrapper(navController,cart,favoriteProducts, scrollState, searchStateMutableFlow, searchTagsMutableStateFlow, it) { route ->
+        NavigationWrapper(navController,snackbarHostState,cart,favoriteProducts, scrollState, searchStateMutableFlow, searchTagsMutableStateFlow, it) { route ->
             when {
                 route == BottomMenuItem.FeedScreen.route -> {
                     showMainTopAppbar = true

@@ -2,6 +2,7 @@ package com.hneu.vydelka.datasource.user
 
 import com.hneu.core.datasource.order.LocalOrderDataSource
 import com.hneu.core.datasource.product.LocalProductDataSource
+import com.hneu.core.datasource.profile.LocalProfileDataSource
 import com.hneu.core.datasource.user.LocalUserDataSource
 import com.hneu.core.domain.product.Product
 import com.hneu.core.domain.request.Result
@@ -20,7 +21,15 @@ class RoomUserDataSource @Inject constructor(
     private val userDao: UserDao,
     private val productDataSource: LocalProductDataSource,
     private val orderDataSource: LocalOrderDataSource,
-) : LocalUserDataSource {
+) : LocalUserDataSource, LocalProfileDataSource {
+    override fun getByUsername(username: String): Flow<Result<User>> {
+        return try {
+            flowOf(Result.Success(userDao.getUserByUsername(username).toDomain()))
+        } catch (e: Exception) {
+            flowOf(Result.Error(e))
+        }
+    }
+
     override fun saveUser(user: User): Flow<Result<User>> {
         return try {
             val localUser = user.fromDomain()

@@ -8,8 +8,6 @@ import com.hneu.core.domain.user.User
 import com.hneu.core.repository.user.UserRepository
 import javax.inject.Singleton
 import com.hneu.core.domain.request.Result
-import com.hneu.core.repository.cart.CartRepository
-import com.hneu.core.repository.favorite.FavoriteRepository
 import com.hneu.core.usecase.cart.FetchCartUseCase
 import com.hneu.core.usecase.cart.SaveCartUseCase
 import com.hneu.core.usecase.favorite.AddToFavoritesUseCase
@@ -17,6 +15,11 @@ import com.hneu.core.usecase.favorite.FetchFavoriteProductsUseCase
 import com.hneu.core.usecase.favorite.RemoveFromFavoritesUseCase
 import com.hneu.core.usecase.order.FetchOrdersUseCase
 import com.hneu.core.usecase.order.SaveOrderUseCase
+import com.hneu.core.usecase.profile.ChangeContactsUseCase
+import com.hneu.core.usecase.profile.ChangePasswordUseCase
+import com.hneu.core.usecase.profile.LoginByUsernameAndPasswordUseCase
+import com.hneu.core.usecase.profile.RegisterUserUseCase
+import com.hneu.core.usecase.profile.SignOutUseCase
 import com.hneu.vydelka.di.ApplicationScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +39,11 @@ import javax.inject.Inject
 @Singleton
 class AccountManagerImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences,
+    private val loginByUsernameAndPasswordUseCase: LoginByUsernameAndPasswordUseCase,
+    private val registerUserUseCase: RegisterUserUseCase,
+    private val changePasswordUseCase: ChangePasswordUseCase,
+    private val changeContactsUseCase: ChangeContactsUseCase,
+    private val signOutUseCase: SignOutUseCase,
     @ApplicationScope private val coroutineScope: CoroutineScope,
     private val userRepository: UserRepository,
     private val fetchFavoriteProductsUseCase: FetchFavoriteProductsUseCase,
@@ -50,7 +58,8 @@ class AccountManagerImpl @Inject constructor(
     private var _cart: Cart = CART_UNREGISTERED_USER
     private var cartStateFlow: MutableStateFlow<Cart> = MutableStateFlow(CART_UNREGISTERED_USER)
     private var favoritesFlow: MutableStateFlow<Result<List<Product>>> = MutableStateFlow(Result.Loading())
-    private val isUserLoggedIn = MutableStateFlow(sharedPreferences.getBoolean(SHARED_PREF_KEY, false))
+    private val isUserLoggedIn = MutableStateFlow(sharedPreferences.getBoolean(LOGGED_USER_SHARED_PREF_KEY, false))
+    private val _currentUserFlow = MutableStateFlow<Result<User>>(Result.Success(AccountManagerImpl.UNREGISTERED_USER))
 
     init {
         coroutineScope.launch {
@@ -260,17 +269,66 @@ class AccountManagerImpl @Inject constructor(
         return saveOrderUseCase.invoke(order, _currentUser)
     }
 
+    override fun loginByUsernameAndPassword(
+        username: String,
+        password: String
+    ): Flow<Result<User>> {
+        coroutineScope.launch {
+            loginByUsernameAndPasswordUseCase.invoke(username, password)
+                .flowOn(Dispatchers.IO)
+                .collectLatest {
+                    _currentUserFlow.emit(it)
+                    if(it is Result.Success) {
+                        val user = it.data
+                        sharedPreferences.edit().putString(ACTIVE_USERNAME_SHARED_PREF_KEY,user.username).apply()
+                    }
+                }
+        }
+        return _currentUserFlow
+    }
+
+    override fun register(user: User): Flow<Result<User>> {
+        return registerUserUseCase.invoke(user)
+    }
+
+    override fun changePassword(user: User): Flow<Result<User>> {
+        return changePasswordUseCase.invoke(user)
+    }
+
+    override fun changeContacts(user: User): Flow<Result<User>> {
+        return changeContactsUseCase.invoke(user)
+    }
+
+    override fun signOut(): Flow<Result<User>> {
+        coroutineScope.launch {
+            signOutUseCase.invoke()
+                .flowOn(Dispatchers.IO)
+                .collectLatest {
+                    when(it) {
+                        is Result.Completed -> {
+                            _currentUserFlow.emit(Result.Success(UNREGISTERED_USER))
+                            sharedPreferences.edit().putString(ACTIVE_USERNAME_SHARED_PREF_KEY,"").apply()
+                        }
+                        else -> flowOf(it)
+                    }
+                }
+        }
+        return _currentUserFlow
+    }
+
+
     companion object {
-        private const val SHARED_PREF_KEY = "isLogged"
+        private const val LOGGED_USER_SHARED_PREF_KEY = "isLogged"
+        private const val ACTIVE_USERNAME_SHARED_PREF_KEY = "activeUsername"
         val UNREGISTERED_USER =
             User(
                 id = 0,
                 username = "UNREGISTERED",
                 name = "UNREGISTERED",
-                lastname = "UNREGISTERED",
+                lastName = "UNREGISTERED",
                 password = "nopass",
                 phoneNumber = "",
-                address = "",
+                shippingAddress = "",
                 orderHistory = emptyList(),
                 productHistory = emptyList(),
                 favoriteProducts = emptyList(),

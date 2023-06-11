@@ -37,7 +37,7 @@ fun Promo.fromDomain() =
     LocalPromo(
         promoId = id,
         promoName = name,
-        titleImageSrc = titleImageSrc,
+        titleImageSrc = promoImageSrc,
         detailedDescription = detailedDescription
     )
 

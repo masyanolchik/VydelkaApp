@@ -10,15 +10,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FormatListBulleted
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,17 +26,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.hneu.core.domain.user.User
 import com.hneu.vydelka.R
 import com.hneu.vydelka.ui.profile.forgotpassword.ForgotPasswordScreen
 import com.hneu.vydelka.ui.profile.ordershistory.OrderHistoryScreen
 import com.hneu.vydelka.ui.profile.register.RegisterScreen
 import com.hneu.vydelka.ui.profile.userinfo.UserInfoScreen
 import com.hneu.vydelka.ui.profile.viewhistory.ViewHistoryScreen
+import com.hneu.core.domain.request.Result
+import com.hneu.vydelka.accountmanager.AccountManagerImpl
+
 
 @Composable
-fun Profile(navController: NavHostController = rememberNavController()) {
+fun Profile(
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    navController: NavHostController = rememberNavController(),
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+) {
+    val scope = rememberCoroutineScope()
     var openOrderHistoryDialog by rememberSaveable { mutableStateOf(false) }
     var openViewHistoryDialog by rememberSaveable { mutableStateOf(false) }
     var openAccountDetailsDialog by rememberSaveable { mutableStateOf(false) }
@@ -49,41 +57,102 @@ fun Profile(navController: NavHostController = rememberNavController()) {
     var openRegisterProfile by rememberSaveable {
         mutableStateOf(false)
     }
-    var isUserLoggedIn by rememberSaveable {
-        mutableStateOf(false)
+    val currentUser by profileViewModel.currentUser.collectAsStateWithLifecycle()
+    val userRegisteredState by profileViewModel.userRegisterState.collectAsStateWithLifecycle()
+    val passwordChangedState by profileViewModel.passwordChangedState.collectAsStateWithLifecycle()
+    when(passwordChangedState) {
+        is Result.Completed -> {
+            LaunchedEffect(userRegisteredState) {
+                snackbarHostState.showSnackbar("Пароль успішно змінено", duration = SnackbarDuration.Long)
+            }
+        }
+        is Result.Error -> {
+            LaunchedEffect(userRegisteredState) {
+                snackbarHostState.showSnackbar("Відбулася помилка при зміні паролю, спробуйте ще раз", duration = SnackbarDuration.Long)
+            }
+        }
+        else -> {}
+    }
+    when(userRegisteredState) {
+        is Result.Completed -> {
+            LaunchedEffect(userRegisteredState) {
+                snackbarHostState.showSnackbar("Профіль створено", duration = SnackbarDuration.Long)
+            }
+        }
+        is Result.Error -> {
+            LaunchedEffect(userRegisteredState) {
+                snackbarHostState.showSnackbar("Відбулася помилка при створенні профілю, спробуйте ще раз", duration = SnackbarDuration.Long)
+            }
+        }
+        else -> {}
     }
     when {
-        openOrderHistoryDialog -> {
-            OrderHistoryScreen(
-                onClose = { openOrderHistoryDialog = false },
-            )
-        }
-        openViewHistoryDialog -> {
-            ViewHistoryScreen(
-                navController = navController,
-                onClose = { openViewHistoryDialog = false },
-            )
-        }
-        openAccountDetailsDialog -> {
-            UserInfoScreen(
-                onClose = { openAccountDetailsDialog = false },
-                onProceed = { openAccountDetailsDialog = false }
-            )
-        }
         openForgotPasswordDialog -> {
             ForgotPasswordScreen(
                 onClose = { openForgotPasswordDialog = false },
-                onProceed = { _, _, _ -> openForgotPasswordDialog = false }
+                onProceed = { username, email, password ->
+                    openForgotPasswordDialog = false
+                    profileViewModel.changePassword(username,email,password)
+                }
             )
         }
         openRegisterProfile -> {
             RegisterScreen(
                 onClose = { openRegisterProfile = false },
-                onProceed = { _, _, _, _, _, _, _ -> openRegisterProfile = false }
+                onProceed = { username, email, password, name, lastName, phone, address ->
+                    openRegisterProfile = false
+                    profileViewModel.registerUser(username, email, password, name, lastName, phone, address)
+                }
             )
         }
-        else -> {
-            if(isUserLoggedIn) {
+        else -> {}
+    }
+    when(currentUser) {
+        is Result.Success -> {
+            val userObject = (currentUser as Result.Success<User>).data
+            when {
+                openOrderHistoryDialog -> {
+                    OrderHistoryScreen(
+                        onClose = { openOrderHistoryDialog = false },
+                    )
+                }
+                openViewHistoryDialog -> {
+                    ViewHistoryScreen(
+                        navController = navController,
+                        onClose = { openViewHistoryDialog = false },
+                    )
+                }
+                openAccountDetailsDialog -> {
+                    var nameText by rememberSaveable {
+                        mutableStateOf(userObject.name)
+                    }
+                    var lastNameText by rememberSaveable {
+                        mutableStateOf(userObject.lastName)
+                    }
+                    var phoneText by rememberSaveable {
+                        mutableStateOf(userObject.phoneNumber)
+                    }
+                    var addressText by rememberSaveable {
+                        mutableStateOf(userObject.shippingAddress)
+                    }
+                    UserInfoScreen(
+                        nameText = nameText,
+                        onNameTextFieldChanged = { nameText = it },
+                        lastNameText = lastNameText,
+                        onLastNameTextFieldChanged = { lastNameText = it},
+                        phoneText = phoneText,
+                        onPhoneTextFieldChanged = { phoneText = it },
+                        addressText = addressText,
+                        onAddressTextFieldChanged = { addressText = it },
+                        onClose = { openAccountDetailsDialog = false },
+                        onProceed = {
+                            openAccountDetailsDialog = false
+                            profileViewModel.changeContacts(nameText, lastNameText, phoneText, addressText)
+                        },
+                    )
+                }
+            }
+            if(!userObject.equals(AccountManagerImpl.UNREGISTERED_USER)) {
                 Column {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -93,7 +162,7 @@ fun Profile(navController: NavHostController = rememberNavController()) {
                             .weight(0.3f),
                     ) {
                         Text(
-                            text = "Ім'я Фамілія",
+                            text = "${userObject.name} ${userObject.lastName}",
                             fontSize = 48.sp,
                             letterSpacing = 0.sp,
                         )
@@ -149,7 +218,7 @@ fun Profile(navController: NavHostController = rememberNavController()) {
                                 )
                             },
                             modifier = Modifier.clickable {
-                                isUserLoggedIn = false
+                                profileViewModel.signOut()
                             }
                         )
                         Divider()
@@ -184,7 +253,7 @@ fun Profile(navController: NavHostController = rememberNavController()) {
                             value = usernameTextFieldValue,
                             isError = isAuthorizationFailed,
                             onValueChange = {
-                               usernameTextFieldValue = it
+                                usernameTextFieldValue = it
                             },
                             label = { Text(stringResource(id = R.string.profile_username_text_field)) },
                         )
@@ -211,7 +280,9 @@ fun Profile(navController: NavHostController = rememberNavController()) {
                     }
                     Row {
                         FilledTonalButton(
-                            onClick = { isUserLoggedIn = true },
+                            onClick = {
+                                profileViewModel.loginWithUsernameAndPassword(usernameTextFieldValue, passwordTextFieldValue)
+                            },
                             modifier = Modifier.padding(end = 8.dp)
                         ) {
                             Text(
@@ -239,7 +310,31 @@ fun Profile(navController: NavHostController = rememberNavController()) {
                 }
             }
         }
+        is Result.Loading -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        is Result.Error -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = "Трапилася помилка, що робити хз",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+            }
+        }
+        else -> {}
     }
+
 }
 
 @Preview(showBackground = true)

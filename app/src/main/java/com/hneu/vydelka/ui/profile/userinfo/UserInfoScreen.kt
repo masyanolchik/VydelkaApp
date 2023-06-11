@@ -20,11 +20,18 @@ import com.hneu.vydelka.ui.order.components.FullScreenDialogWithElevatedTopAppBa
 import com.hneu.vydelka.ui.order.components.UserOrderConfirmationInfoForm
 
 @Composable
-fun UserInfoScreen(onClose: () -> Unit, onProceed: () -> Unit) {
-    var nameText by rememberSaveable { mutableStateOf("") }
-    var lastNameText by rememberSaveable { mutableStateOf("") }
-    var phoneText by rememberSaveable { mutableStateOf("") }
-    var addressText by rememberSaveable { mutableStateOf("") }
+fun UserInfoScreen(
+    nameText: String = "",
+    onNameTextFieldChanged: (String) -> Unit = {},
+    lastNameText: String = "",
+    onLastNameTextFieldChanged: (String) -> Unit = {},
+    phoneText: String = "",
+    onPhoneTextFieldChanged: (String) -> Unit = {},
+    addressText: String = "",
+    onAddressTextFieldChanged: (String) -> Unit = {},
+    onClose: () -> Unit = {},
+    onProceed: () -> Unit = {},
+) {
     var isNameValid by rememberSaveable {
         mutableStateOf(nameText.isNotEmpty())
     }
@@ -77,22 +84,22 @@ fun UserInfoScreen(onClose: () -> Unit, onProceed: () -> Unit) {
             phoneTextFieldValue = phoneText,
             addressTextFieldValue = addressText,
             onNameTextFieldValueChanged = {
-                nameText = it
+                onNameTextFieldChanged(it)
                 isNameValid = it.isNotEmpty()
             },
             isNameValid = isNameValid,
             onLastNameTextFieldValueChanged = {
-                lastNameText = it
+                onLastNameTextFieldChanged(it)
                 isLastNameValid = it.isNotEmpty()
             },
             isLastNameValid = isLastNameValid,
             onPhoneTextFieldValueChanged = {
-                phoneText = it
+                onPhoneTextFieldChanged(it)
                 isPhoneNumberValid = phoneText.isNotEmpty() && android.util.Patterns.PHONE.matcher(phoneText).matches()
             },
             isPhoneNumberValid = isPhoneNumberValid,
             onAddressTextFieldValueChanged = {
-                addressText = it
+                onAddressTextFieldChanged(it)
                 isAddressValid = it.isNotEmpty()
             },
             isAddressValid = isAddressValid,

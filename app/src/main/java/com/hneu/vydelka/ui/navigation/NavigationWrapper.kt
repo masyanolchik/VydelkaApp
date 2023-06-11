@@ -3,6 +3,7 @@ package com.hneu.vydelka.ui.navigation
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun NavigationWrapper(
     navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
     cartState: Cart,
     favoritesState: Result<List<Product>>,
     scrollState: ScrollState,
@@ -35,12 +37,13 @@ fun NavigationWrapper(
     onNavigate: (String) -> Unit,
 ) {
     NavHost(navController = navController, startDestination = BottomMenuItem.FeedScreen.route, modifier = Modifier.padding(paddingValues)) {
-        navigateTo(cartState, favoritesState, navController, onNavigate, searchStateFlow, tagsMutableStateFlow)
+        navigateTo(cartState,snackbarHostState, favoritesState, navController, onNavigate, searchStateFlow, tagsMutableStateFlow)
     }
 }
 
 fun NavGraphBuilder.navigateTo(
     cartState: Cart,
+    snackbarHostState: SnackbarHostState,
     favoritesState: Result<List<Product>>,
     navController: NavHostController,
     onNavigate: (String) -> Unit,
@@ -61,7 +64,7 @@ fun NavGraphBuilder.navigateTo(
     }
     composable(BottomMenuItem.ProfileScreen.route) {
         onNavigate(BottomMenuItem.ProfileScreen.route)
-        Profile(navController)
+        Profile(navController = navController, snackbarHostState = snackbarHostState)
     }
     composable("${NavigationRoutes.CategoryRoute.route}{${NavigationRoutes.CategoryRoute.idRoute}}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString(NavigationRoutes.CategoryRoute.idRoute)?.toInt() ?: -1
