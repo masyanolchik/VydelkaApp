@@ -69,6 +69,7 @@ class RoomProductDataSource @Inject constructor(
     override fun getProductById(productId: Int): Flow<Result<Product>> {
         return try {
             val productLocal = productDao.getProduct(productId)
+            productLocal.localCategory = categoryDao.getCategoryByIdWithAttributes(productLocal.localProduct.categoryId)
             val attributeGroups = categoryDao.getAttributeGroupsForCategory(productLocal.localProduct.categoryId).map {
                 attributeGroupDao.getAttributeGroupWithAllowedValues(it.attributeGroupId).toDomain()
             }
@@ -117,6 +118,7 @@ class RoomProductDataSource @Inject constructor(
 
     private fun saveProductInternal(product: Product) {
         try {
+            saveCategory(product.category)
             productDao.insertProduct(product.fromDomain())
             product.images.forEach {
                 additionalImageDao.addAdditionalImage(it.fromDomainToLocalAdditionalImage()).toInt()
@@ -144,6 +146,41 @@ class RoomProductDataSource @Inject constructor(
                         tagId = tag.id
                     )
                 )
+            }
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    private fun saveCategory(category: Category?) {
+        try {
+            if(category?.parentCategory != null) {
+                saveCategory(category.parentCategory)
+            }
+            if(category != null) {
+                val localCategory = category.fromDomain()
+                categoryDao.addCategory(localCategory)
+                category.attributeGroups.forEach { attrGroup ->
+                    val localGroup = attrGroup.fromDomain()
+                    attributeGroupDao.addAttributeGroup(localGroup)
+                    attrGroup.attributes.forEach { attr ->
+                        val localAttribute = attr.fromDomain()
+                        attributeDao.addAttribute(localAttribute)
+                        attributeDao.getAttributeById(localAttribute.attributeId)
+                        attributeGroupDao.addAttributeGroupAttributesCrossRef(
+                            AttributeGroupAttributesCrossRef(
+                                attributeGroupId = attrGroup.id,
+                                attributeId = attr.id
+                            )
+                        )
+                    }
+                    categoryDao.addCategoryAttributeGroupsCrossRef(
+                        CategoryAttributeGroupsCrossRef(
+                            categoryId = localCategory.categoryId,
+                            attributeGroupId = attrGroup.id
+                        )
+                    )
+                }
             }
         } catch (e: Exception) {
             throw e

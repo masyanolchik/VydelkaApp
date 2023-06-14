@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.ElectricCar
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Handyman
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Memory
 import androidx.compose.material.icons.outlined.PhoneAndroid
 import androidx.compose.material.icons.outlined.Tv
 import androidx.compose.material.icons.outlined.Yard
@@ -111,6 +112,7 @@ class CategoriesViewModel @Inject constructor(
                                         "Авто" -> Icons.Outlined.ElectricCar
                                         "Інструменти" -> Icons.Outlined.Handyman
                                         "Сад, дача" -> Icons.Outlined.Yard
+                                        "Процесори" -> Icons.Outlined.Memory
                                          else -> Icons.Outlined.Error
                                     }
                                     CategoryNode(

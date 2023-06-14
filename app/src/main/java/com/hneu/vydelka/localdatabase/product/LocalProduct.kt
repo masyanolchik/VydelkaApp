@@ -59,7 +59,7 @@ fun LocalProduct.toDomain(
     )
 
 fun LocalProductWithAdditionalFields.toDomain(attributeGroups: List<AttributeGroup> = emptyList(), parentCategory: Category? = null) : Product {
-    val category = localCategory.toDomain(parentCategory)
+    val category = localCategory?.toDomain(parentCategory) ?: Category("sdsd", null, emptyList())
     val attrList = attributeList.map { it.toDomain() }
     val attrMap = mutableMapOf<AttributeGroup, Attribute>()
     attrList.forEach() { attr ->

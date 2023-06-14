@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,8 +39,8 @@ class FeedViewModel @Inject constructor(
 
     val isUserLoggedIn = accountManager.isUserLoggedIn()
 
-    var categoryToProductsMap = MutableStateFlow(mutableMapOf<Int, Result<List<Product>>>())
-
+    private var _categoryToProductsMap = MutableStateFlow<Result<MutableMap<Int,List<Product>>>>(Result.Loading())
+    val categoryToProductsMap: StateFlow<Result<MutableMap<Int,List<Product>>>> = _categoryToProductsMap
 
     init {
         viewModelScope.launch {
@@ -57,21 +58,29 @@ class FeedViewModel @Inject constructor(
                 .collectLatest {
                     _topProducts.emit(it)
                 }
-
         }
     }
 
-    fun fetchProductsByCategoryId(categoryId: Int): StateFlow<Result<List<Product>>> {
-        val stateFlow: MutableStateFlow<Result<List<Product>>> = MutableStateFlow(Result.Loading())
+    fun fetchProductsByCategoryId(categoryId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             getProductsByCategoryIdUseCase
                 .invoke(categoryId)
-                .distinctUntilChanged()
                 .collectLatest {
-                    categoryToProductsMap.value[categoryId] = it
+                    val categoryToProductsMap = mutableMapOf<Int,List<Product>>()
+                    if(_categoryToProductsMap.value is Result.Success) {
+                        categoryToProductsMap.putAll((_categoryToProductsMap.value as Result.Success<MutableMap<Int, List<Product>>>).data)
+                    }
+                    when(it) {
+                        is Result.Success -> {
+                            categoryToProductsMap[categoryId] = it.data
+                            _categoryToProductsMap.emit(Result.Success(categoryToProductsMap))
+                        }
+                        else -> {
+
+                        }
+                    }
                 }
         }
-        return stateFlow
     }
 
     fun addProductToCart(product: Product) {

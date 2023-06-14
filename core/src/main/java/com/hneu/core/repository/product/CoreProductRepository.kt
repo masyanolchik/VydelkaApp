@@ -76,8 +76,8 @@ class CoreProductRepository(
                 when(result) {
                     is Result.Success -> {
                         val listOfProducts = mutableListOf<Product>()
-                        result.data.forEach {
-                            val productSave = localDataSource.saveProduct(it).first()
+                        result.data.forEach {product ->
+                            val productSave = localDataSource.saveProduct(product).first()
                             if(productSave is Result.Success) {
                                 listOfProducts.add(productSave.data)
                             }

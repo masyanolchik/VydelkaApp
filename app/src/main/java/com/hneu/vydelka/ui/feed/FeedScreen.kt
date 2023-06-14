@@ -60,6 +60,7 @@ fun Feed(
 
     val promoListState by feedViewModel.promosStateFlow.collectAsStateWithLifecycle()
     val catToShow = remember { mutableStateListOf<CategoriesViewModel.CategoryNode>() }
+    val products by feedViewModel.categoryToProductsMap.collectAsStateWithLifecycle()
     LazyColumn(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -139,6 +140,7 @@ fun Feed(
                             ),
                         ) {
                             items(itemsInRow) {
+                                feedViewModel.fetchProductsByCategoryId(it.category.id)
                                 SmallCategoryButton(
                                     it.category.name,
                                     it.categoryIcon,
@@ -294,18 +296,14 @@ fun Feed(
                 Divider()
             }
         }
-
-        if (catToShow.isNotEmpty()) {
-            items(catToShow) {
-                feedViewModel.fetchProductsByCategoryId(it.category.id)
-                val products by feedViewModel.categoryToProductsMap.collectAsStateWithLifecycle()
-                when (products[it.category.id]) {
-                    is Result.Loading -> CircularProgressIndicator()
-                    is Result.Success -> {
-                        val productList =
-                            remember { ((products[it.category.id] as Result.Success<List<Product>>).data).toMutableStateList() }
-                        SectionLabel(text = it.category.name)
-                        productList.forEach {
+        item {
+            when(products) {
+                is Result.Success -> {
+                    val data = (products as Result.Success<MutableMap<Int, List<Product>>>).data
+                    data.keys.forEach { catId ->
+                        SectionLabel(text = catToShow.find { it.category.id == catId }?.category?.name ?: "")
+                        val productList = data[catId]
+                        productList?.forEach {
                             var isProductAddedToCart =
                                 cart.orderedProducts.map { op -> op.product.id }.contains(it.id)
                             var isProductFavorited =
@@ -348,10 +346,10 @@ fun Feed(
                                 )
                             }
                         }
-                    }
 
-                    else -> {}
+                    }
                 }
+                else -> CircularProgressIndicator()
             }
         }
     }

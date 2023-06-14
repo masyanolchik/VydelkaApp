@@ -32,8 +32,8 @@ fun SmallCategoryButton(
     val onButtonColor = MaterialTheme.colorScheme.onSecondaryContainer
     Card(
         modifier = Modifier
-            .height(86.dp)
-            .width(86.dp),
+            .height(80.dp)
+            .width(80.dp),
         shape = ShapeDefaults.Large,
         backgroundColor = buttonColor,
         onClick = onClick,

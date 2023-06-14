@@ -55,8 +55,9 @@ fun MediumBoxProductCard(
             Text(
                 text = title,
                 textAlign = TextAlign.Center,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .wrapContentHeight()
+                    .height(56.dp)
                     .padding(bottom = 8.dp)
             )
             Text(

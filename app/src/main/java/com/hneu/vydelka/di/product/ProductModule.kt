@@ -1,6 +1,7 @@
 package com.hneu.vydelka.di.product
 
 import com.hneu.core.datasource.product.LocalProductDataSource
+import com.hneu.core.datasource.product.RemoteProductDataSource
 import com.hneu.core.datasource.product.testing.FakeRemoteProductDataSource
 import com.hneu.core.repository.product.CoreProductRepository
 import com.hneu.core.repository.product.ProductRepository
@@ -11,16 +12,19 @@ import com.hneu.core.usecase.product.GetProductByIdUseCase
 import com.hneu.core.usecase.product.GetProductsByCategoryIdUseCase
 import com.hneu.core.usecase.product.GetProductsByTagsUseCase
 import com.hneu.core.usecase.product.GetTopProductsUseCase
+import com.hneu.vydelka.datasource.product.RetrofitProductDataSource
 import com.hneu.vydelka.datasource.product.RoomProductDataSource
 import com.hneu.vydelka.localdatabase.LocalDatabase
 import com.hneu.vydelka.localdatabase.product.ProductDao
 import com.hneu.vydelka.localdatabase.product.additionalimage.AdditionalImageDao
 import com.hneu.vydelka.localdatabase.product.tag.TagDao
+import com.hneu.vydelka.network.product.ProductApiService
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -29,6 +33,9 @@ interface ProductModule {
 
     @Binds
     fun bindLocalDataSource(roomProductDataSource: RoomProductDataSource): LocalProductDataSource
+
+    @Binds
+    fun bindRemoteDataSource(retrofitProductDataSource: RetrofitProductDataSource): RemoteProductDataSource
 
     companion object {
         @Provides
@@ -67,8 +74,8 @@ interface ProductModule {
         }
 
         @Provides
-        fun provideRepository(localProductDataSource: LocalProductDataSource): ProductRepository {
-            return CoreProductRepository(localProductDataSource, FakeRemoteProductDataSource())
+        fun provideRepository(localProductDataSource: LocalProductDataSource, remoteProductDataSource: RemoteProductDataSource): ProductRepository {
+            return CoreProductRepository(localProductDataSource, remoteProductDataSource)
         }
 
         @Singleton
@@ -81,6 +88,12 @@ interface ProductModule {
         @Provides
         fun provideProductDao(db: LocalDatabase): ProductDao {
             return db.productDao()
+        }
+
+        @Singleton
+        @Provides
+        fun provideProductApi(retrofit: Retrofit): ProductApiService {
+            return retrofit.create(ProductApiService::class.java)
         }
 
         @Singleton

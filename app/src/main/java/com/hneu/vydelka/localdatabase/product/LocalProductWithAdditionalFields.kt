@@ -16,7 +16,7 @@ data class LocalProductWithAdditionalFields(
         parentColumn = "productId",
         entityColumn = "categoryId"
     )
-    val localCategory: LocalCategoryWithLocalAttributeGroups,
+    var localCategory: LocalCategoryWithLocalAttributeGroups?,
     @Relation(
         parentColumn = "productId",
         entityColumn = "tagId",

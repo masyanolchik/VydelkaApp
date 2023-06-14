@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -79,9 +80,11 @@ fun ProductCard(
                     Text(
                         color = MaterialTheme.colorScheme.onBackground,
                         text = title,
+                        overflow = TextOverflow.Ellipsis,
                         fontSize = 16.sp,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .height(64.dp)
                             .constrainAs(titleRef) {
                                 start.linkTo(parent.start)
                                 top.linkTo(parent.top)
