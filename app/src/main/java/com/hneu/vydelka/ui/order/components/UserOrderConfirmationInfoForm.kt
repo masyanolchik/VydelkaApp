@@ -2,13 +2,16 @@ package com.hneu.vydelka.ui.order.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Room
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,6 +41,8 @@ fun UserOrderConfirmationInfoForm(
     onAddressTextFieldValueChanged: (String) -> Unit = { },
     isAddressValid: Boolean = true,
     paddingValues: PaddingValues = PaddingValues(),
+    checkedState: Boolean = false,
+    onCheckedStateChange: (Boolean) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -134,6 +140,30 @@ fun UserOrderConfirmationInfoForm(
                 text = stringResource(R.string.user_order_confirmation_validation_required_field_error),
                 fontSize = 14.sp,
                 color = Color.Red
+            )
+        }
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .toggleable(
+                    value = checkedState,
+                    onValueChange = {
+                        onCheckedStateChange(it)
+                    },
+                    role = Role.Checkbox
+                )
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = checkedState,
+                onCheckedChange = null
+            )
+            Text(
+                text = stringResource(id = R.string.confirm_process_user_data),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(start = 16.dp)
             )
         }
     }

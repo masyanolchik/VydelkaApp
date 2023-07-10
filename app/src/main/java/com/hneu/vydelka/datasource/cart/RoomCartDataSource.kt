@@ -21,6 +21,8 @@ class RoomCartDataSource @Inject constructor(
     override fun saveCart(cart: Cart): Flow<Result<Cart>> {
         return try {
             val cartId = cartDao.addCart(cart.fromDomain())
+            orderedProductDao.nukeOrderedProducts()
+            orderedProductDao.nukeTable()
             cart.orderedProducts.forEach {
                 orderedProductDao.addOrderedProduct(it.fromDomain())
                 cartDao.addOrderedProductCrossRef(CartOrderedProductsCrossRef(

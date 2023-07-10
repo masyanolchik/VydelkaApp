@@ -77,4 +77,5 @@
     <string name="user_order_confirmation_validation_required_field_error">Обов\'язкове поле!</string>
     <string name="user_order_confirmation_validation_phone_error">Введіть коректний номер телефону</string>
     <string name="order_confirmation_validation_error">Заповніть коректно форму</string>
+    <string name="confirm_process_user_data">Даю згоду на обробку персональних даних</string>
 </resources>

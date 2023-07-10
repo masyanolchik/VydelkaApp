@@ -28,7 +28,7 @@ class RetrofitPromoDataSource @Inject constructor(private val promoApiService: P
                                     name = it.name,
                                     detailedDescription = it.detailedDescription,
                                     tags = it.tags,
-                                    promoImageSrc = "http://192.168.31.114:8080"+it.promoImageSrc
+                                    promoImageSrc = "http://192.168.0.109:8080"+it.promoImageSrc
                                 )
                             }))
                         }

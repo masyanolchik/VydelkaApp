@@ -59,7 +59,7 @@ class OrderViewModel @Inject constructor(
                 .invoke(
                     Order(
                         id = -1,
-                        dateOfOrder = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().time),
+                        dateOfOrder = SimpleDateFormat("yyyy-MM-dd HH:mm").format(Calendar.getInstance().time),
                         orderStatus = getApplication<VydelkaApplication>().getString(R.string.new_order_status),
                         nonRegisteredCustomerName = nameText,
                         nonRegisteredCustomerLastname = lastNameText,

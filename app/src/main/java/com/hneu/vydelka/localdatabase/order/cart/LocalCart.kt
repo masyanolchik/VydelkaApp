@@ -15,7 +15,6 @@ import com.hneu.vydelka.localdatabase.user.toDomain
         ForeignKey(
             parentColumns = ["userId"],
             childColumns = ["userId"],
-            onDelete = ForeignKey.CASCADE,
             entity = LocalUser::class
         ),
     ]

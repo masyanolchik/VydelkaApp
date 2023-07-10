@@ -41,9 +41,17 @@ fun ProductResponseDataModel.toDomain() : Product {
         returnExchangeLength,
         category,
         description,
-        "http://192.168.31.114:8080$titleImageSrc",
-        images.map { "http://192.168.31.114:8080$it" },
+        titleImageSrc.transformToRemoteImageSrc("http://192.168.0.109:8080"),
+        images.map { it.transformToRemoteImageSrc("http://192.168.0.109:8080") },
         attributeMap,
         additionalTags,
     )
+}
+
+fun String.transformToRemoteImageSrc(linkStart: String): String {
+    return if(this.contains("http")) {
+        this
+    } else {
+        "$linkStart$this"
+    }
 }

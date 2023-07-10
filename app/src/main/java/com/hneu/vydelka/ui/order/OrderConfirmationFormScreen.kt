@@ -41,6 +41,9 @@ fun OrderConfirmationForm(
     val topAppBarTitle: @Composable () -> Unit = {
         Text(stringResource(id = R.string.bottom_sheet_proceed_order))
     }
+    var isConfirmationChecked by rememberSaveable {
+        mutableStateOf(false)
+    }
     val topAppBarNavigationIcon: @Composable () -> Unit = {
         IconButton(onClick = onClose) {
             Icon(
@@ -52,7 +55,7 @@ fun OrderConfirmationForm(
     val topAppBarActions: @Composable RowScope.() -> Unit = {
         val errorText = stringResource(id = R.string.order_confirmation_validation_error)
         TextButton(onClick = {
-            if(isNameValid && isLastNameValid && isPhoneNumberValid && isAddressValid) {
+            if(isNameValid && isLastNameValid && isPhoneNumberValid && isAddressValid && isConfirmationChecked) {
                 onProceed()
             } else {
                 onError(errorText)
@@ -93,6 +96,10 @@ fun OrderConfirmationForm(
                 isAddressValid = it.isNotEmpty()
             },
             isAddressValid = isAddressValid,
+            checkedState = isConfirmationChecked,
+            onCheckedStateChange = {
+                isConfirmationChecked = !isConfirmationChecked
+            }
         )
     }
 }

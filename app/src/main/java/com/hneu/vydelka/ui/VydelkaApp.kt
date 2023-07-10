@@ -169,7 +169,6 @@ fun MainScreen(
                 onAddressTextFieldValueChanged = { text -> addressText = text},
                 onClose = {
                     showOrderFormDialog = false
-
                 },
                 onProceed = {
                     showOrderFormDialog = false

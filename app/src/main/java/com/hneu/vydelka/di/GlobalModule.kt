@@ -39,7 +39,7 @@ interface GlobalModule {
 
     companion object {
         private const val PREFERENCES_KEY = "VYDELKA_APP_PREF"
-        private const val API_URL = "http://192.168.31.114:8080/api/"
+        private const val API_URL = "http://192.168.0.109:8080/api/"
 
         @Singleton
         @Provides

@@ -245,9 +245,9 @@ class AccountManagerImpl @Inject constructor(
     }
 
     override fun resetCart(): StateFlow<Cart> {
-        _cart = Cart(0, _currentUser.id, mutableListOf())
+        cartStateFlow.value.orderedProducts.clear()
         coroutineScope.launch {
-            saveCartUseCase(_cart)
+            saveCartUseCase(cartStateFlow.value)
                 .flowOn(Dispatchers.IO)
                 .collectLatest {
                     when(it) {

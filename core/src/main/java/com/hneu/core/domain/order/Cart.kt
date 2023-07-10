@@ -4,7 +4,7 @@ import com.hneu.core.domain.user.User
 import com.hneu.core.domain.product.Product
 
 class Cart(
-    val id: Int,
+    val id: Int = 0,
     val optionalUserId: Int?,
     val orderedProducts: MutableList<OrderedProduct>
 ) {
