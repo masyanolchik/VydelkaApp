@@ -8,13 +8,10 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,8 +30,13 @@ fun ProductCard(
     price: String,
     contentDescription: String,
     imageSrc: String,
+    availability: String = "",
     isProductAddedToCart: Boolean = false,
     isProductFavorited: Boolean = false,
+    pressedFavoritesIcon: ImageVector = Icons.Outlined.Favorite,
+    notPressedFavoritesIcon: ImageVector = Icons.Outlined.FavoriteBorder,
+    pressedShoppingCartIcon: ImageVector = Icons.Filled.ShoppingCart,
+    notPressedShoppingCartIcon: ImageVector = Icons.Outlined.AddShoppingCart,
     onFavoriteButtonClicked: () -> Unit = {},
     onCartButtonClicked: () -> Unit = {},
     onCardClicked: () -> Unit = {},
@@ -94,7 +96,7 @@ fun ProductCard(
                     )
                     Text(
                         color = MaterialTheme.colorScheme.onBackground,
-                        text = "В наявності",
+                        text = availability,
                         modifier = Modifier
                             .fillMaxWidth()
                             .constrainAs(availabilityRef) {
@@ -125,14 +127,14 @@ fun ProductCard(
                         horizontalArrangement = Arrangement.End,
                     ) {
                         val cartIcon = if(isProductAddedToCart) {
-                            Icons.Filled.ShoppingCart
+                            pressedShoppingCartIcon
                         } else {
-                            Icons.Outlined.AddShoppingCart
+                            notPressedShoppingCartIcon
                         }
                         val favoritesIcon = if(isProductFavorited) {
-                            Icons.Outlined.Favorite
+                            pressedFavoritesIcon
                         } else {
-                            Icons.Outlined.FavoriteBorder
+                            notPressedFavoritesIcon
                         }
                         FilledIconButton(
                             onClick = onFavoriteButtonClicked,
@@ -165,11 +167,10 @@ fun CartProductCard(
     contentDescription: String = "",
     imageSrc: String = "",
     quantity: Int = 0,
-    isProductAddedToFavorite: Boolean = false,
+    availability: String = "",
     onQuantityChanges: (String) -> Unit = {},
     onDecreaseQuantityClick: () -> Unit = {},
     onIncreaseQuantityClick: () -> Unit = {},
-    onFavoriteButtonClicked: () -> Unit = {},
     onDeleteProduct: () -> Unit = {},
 ) {
     Surface(
@@ -211,11 +212,6 @@ fun CartProductCard(
                             .fillMaxWidth()
                             .weight(0.3f)
                     ) {
-                        val favoritesIcon = if(isProductAddedToFavorite) {
-                            Icons.Outlined.Favorite
-                        } else {
-                            Icons.Outlined.FavoriteBorder
-                        }
                         Text(
                             color = MaterialTheme.colorScheme.onBackground,
                             text = title,
@@ -247,7 +243,7 @@ fun CartProductCard(
                     }
                     Text(
                         color = MaterialTheme.colorScheme.onBackground,
-                        text = "В наявності",
+                        text = availability,
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(0.1f)

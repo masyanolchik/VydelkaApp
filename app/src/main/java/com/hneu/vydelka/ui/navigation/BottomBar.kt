@@ -7,8 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
-fun BottomMenu(navController: NavHostController) {
-    val menuItems = listOf(BottomMenuItem.FeedScreen, BottomMenuItem.CatalogueScreen, BottomMenuItem.FavoritesScreen, BottomMenuItem.ProfileScreen)
+fun BottomMenu(navController: NavHostController, menuItems: List<BottomMenuItem>) {
     val backStackEntry = navController.currentBackStackEntryAsState()
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.primaryContainer,

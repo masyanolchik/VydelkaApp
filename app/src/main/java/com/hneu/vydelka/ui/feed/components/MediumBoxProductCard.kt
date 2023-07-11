@@ -31,8 +31,7 @@ fun MediumBoxProductCard(
     isProductAddedToCart: Boolean = false,
 ) {
     Card(
-        modifier = Modifier
-            .width(120.dp),
+        modifier = Modifier.width(120.dp),
         shape = ShapeDefaults.Medium,
         onClick = onCardClicked,
     ) {

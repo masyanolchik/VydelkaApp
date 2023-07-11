@@ -98,7 +98,15 @@ fun MainScreen(
         },
         bottomBar = {
             if(showBottomMenu) {
-                BottomMenu(navController = navController)
+                BottomMenu(
+                    navController = navController,
+                    menuItems =  listOf(
+                        BottomMenuItem.FeedScreen,
+                        BottomMenuItem.CatalogueScreen,
+                        BottomMenuItem.FavoritesScreen,
+                        BottomMenuItem.ProfileScreen,
+                    )
+                )
             }
         },
     ) {
